@@ -32,11 +32,16 @@ export class Logger {
         const timestamp = getKoreanTime();
         const levelMessage = level.toUpperCase().padEnd(this.LEVEL_PAD_LENGTH, this.PAD_CHARACTER);
         const logMessage = `[${timestamp}] [${levelMessage}]: ${args.join(' ')}\n`;
-        this.ns.print(logMessage);
 
         const coloredLevelMessage = `${color}${levelMessage}${this.COLOR_RESET}`;
         const coloredLogMessage = `[${timestamp}] [${coloredLevelMessage}]: ${args.join(' ')}\n`;
-        this.ns.tprint(coloredLogMessage);
+
+        if (level === 'info' || level === 'error') {
+            this.ns.print(logMessage);
+            this.ns.tprint(coloredLogMessage);
+        } else if (level === 'warn') {
+            this.ns.print(logMessage);
+        }
 
         if (this.combinedLogLevels.includes(level)) {
             this.ns.write(this.logPath, logMessage, 'a');

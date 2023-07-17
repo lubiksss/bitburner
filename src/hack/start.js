@@ -1,23 +1,31 @@
-import {Logger} from "/src/utils/logger";
+import {Logger} from '/src/utils/logger'
+import {getItems, scanAll, setUp} from '/src/hack/scan'
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-    const ROOT_SRC = "src/hack";
+    const ROOT_SRC = 'src/hack'
 
-    const logger = new Logger(ns);
+    const logger = new Logger(ns)
 
-    const targetServers = ns.scan();
+    const targetServers = scanAll(ns)
 
-    ns.killall();
+    setUp(ns, targetServers, logger)
+    getItems(ns, targetServers)
 
-    for (const targetServer of targetServers) {
-        const isRooted = ns.hasRootAccess(targetServer);
-        if (isRooted) {
-            ns.run(`${ROOT_SRC}/simple-hack.js`, 1, targetServer);
-            logger.info(`Hack ${targetServer}`)
-        } else {
-            logger.warn(`Can't hack ${targetServer}`)
-        }
+    const notScriptRunning = targetServers.filter((server) => !ns.isRunning(`${ROOT_SRC}/run-hack.js`, 'home', server,))
+
+    const notRooted = notScriptRunning.filter(
+        (server) => !ns.hasRootAccess(server),
+    )
+    const hackable = notRooted.filter((server) => {
+        const myHackingLevel = ns.getHackingLevel()
+        const serverHackingLevel = ns.getServerRequiredHackingLevel(server)
+        return myHackingLevel >= serverHackingLevel
+    })
+
+    for (const targetServer of hackable) {
+        ns.run(`${ROOT_SRC}/run-hack.js`, 1, targetServer)
+        logger.info(`Hack ${targetServer}`)
     }
 }
