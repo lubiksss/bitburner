@@ -8,14 +8,10 @@ export async function main(ns) {
 
   // setUp(ns, servers, logger)
   // getItems(ns, servers)
-  const shortestPaths = howToGetServer(ns);
-  ns.tprint(shortestPaths);
 }
 
 // Define the function to get the shortest path between two servers
-function howToGetServer(ns, startServer = "home") {
-  const targetServer = ns.args[0]
-
+export function howToGetServer(ns, startServer = "home", targetServer) {
   // Helper function to perform BFS
   function bfs(start, target) {
     const queue = [{server: start, path: []}];
