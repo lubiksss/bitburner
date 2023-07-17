@@ -14,15 +14,15 @@ export async function main(ns) {
   getItems(ns, targetServers)
 
   const notScriptRunning = targetServers.filter((server) => !ns.isRunning(`${ROOT_SRC}/run-hack.js`, 'home', server))
-  const notRooted = notScriptRunning.filter((server) => !ns.hasRootAccess(server))
-  const hackable = notRooted.filter((server) => {
+  const Rooted = notScriptRunning.filter((server) => ns.hasRootAccess(server))
+  const hackable = Rooted.filter((server) => {
     const myHackingLevel = ns.getHackingLevel()
     const serverHackingLevel = ns.getServerRequiredHackingLevel(server)
     return myHackingLevel >= serverHackingLevel
   })
 
   for (const targetServer of hackable) {
-    ns.run(`${ROOT_SRC}/run-hack.js`, 1, targetServer)
+    ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, targetServer)
     logger.info(`Hack ${targetServer}`)
   }
 }

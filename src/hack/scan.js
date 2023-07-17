@@ -7,7 +7,52 @@ export async function main(ns) {
   const servers = scanAll(ns)
 
   // setUp(ns, servers, logger)
-  getItems(ns, servers)
+  // getItems(ns, servers)
+  const shortestPaths = howToGetServer(ns);
+  ns.tprint(shortestPaths);
+}
+
+// Define the function to get the shortest path between two servers
+function howToGetServer(ns, startServer = "home") {
+  const targetServer = ns.args[0]
+
+  // Helper function to perform BFS
+  function bfs(start, target) {
+    const queue = [{server: start, path: []}];
+    const visited = new Set();
+
+    while (queue.length > 0) {
+      const {server, path} = queue.shift();
+
+      // Check if the current server is the target server
+      if (server === target) {
+        return path.concat(target);
+      }
+
+      // Get adjacent servers
+      const adjacentServers = ns.scan(server);
+
+      for (const adjacentServer of adjacentServers) {
+        // If the adjacent server has not been visited, add it to the queue
+        if (!visited.has(adjacentServer)) {
+          visited.add(adjacentServer);
+          queue.push({server: adjacentServer, path: path.concat(server)});
+        }
+      }
+    }
+
+    // If there is no path from startServer to targetServer
+    return null;
+  }
+
+  // Call the BFS function and get the shortest path
+  const shortestPath = bfs(startServer, targetServer);
+
+  if (shortestPath === null) {
+    return "Can't find path from " + startServer + " to " + targetServer;
+  } else {
+    return shortestPath;
+  }
 }
 
 export function scanAll(ns) {
