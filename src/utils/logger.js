@@ -21,7 +21,7 @@ export class Logger {
   COLOR_RESET = '\x1b[0m';
 
   constructor(ns, logPath = "/log/combined.txt", specificLogPath = "/log/specific.txt") {
-    this.combinedLogLevels = ['info', 'warn', 'error'];
+    this.combinedLogLevels = ['info', 'warn'];
     this.specificLogLevels = ['error'];
     this.ns = ns;
     this.logPath = logPath;
