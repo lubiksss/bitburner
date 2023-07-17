@@ -61,22 +61,13 @@ export function setUp(ns, servers, logger) {
   const hasHTTPWorm = ns.fileExists('/HTTPWorm.exe')
   const hasSQLInject = ns.fileExists('/SQLInject.exe')
 
-  const portCnt = [
-    hasBruteSSH,
-    hasFTPCrack,
-    hasRelaySMTP,
-    hasHTTPWorm,
-    hasSQLInject,
-  ]
+  const portCnt = [hasBruteSSH, hasFTPCrack, hasRelaySMTP, hasHTTPWorm, hasSQLInject]
     .map((has) => (has ? 1 : 0))
     .reduce((a, b) => a + b, 0)
 
-  for (const server of servers) {
-    const isRooted = ns.hasRootAccess(server)
-    if (isRooted) {
-      continue
-    }
+  const notRooted = servers.filter((server) => !ns.hasRootAccess(server))
 
+  for (const server of notRooted) {
     if (hasBruteSSH) {
       ns.brutessh(server)
     }
@@ -93,8 +84,7 @@ export function setUp(ns, servers, logger) {
       ns.sqlinject(server)
     }
 
-    const requiredPortsCnt =
-      ns.getServerNumPortsRequired(server)
+    const requiredPortsCnt = ns.getServerNumPortsRequired(server)
     if (portCnt >= requiredPortsCnt) {
       ns.nuke(server)
       logger.info(`Nuke ${server}`)
