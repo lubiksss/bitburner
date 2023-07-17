@@ -1,4 +1,4 @@
-import {getItems, scanAll, setUp} from "/src/hack/scan";
+import {getItems, scanAll, setScript, setUp} from "/src/hack/scan";
 import {Logger} from "/src/utils/logger";
 
 /** @param {NS} ns */
@@ -8,6 +8,7 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   getItems(ns, servers)
+  setScript(ns, servers)
 
   const isAllServerRooted = servers.every((server) => ns.hasRootAccess(server))
   while (!isAllServerRooted) {

@@ -94,6 +94,12 @@ export function getItems(ns, servers) {
   }
 }
 
+export function setScript(ns, servers) {
+  for (const server of servers) {
+    ns.scp('/src/hack/hack.js', server, "home")
+  }
+}
+
 /** @param {import(".").NS } ns */
 export function setUp(ns, servers, logger) {
   const hasBruteSSH = ns.fileExists('/BruteSSH.exe')
