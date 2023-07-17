@@ -6,8 +6,7 @@ export async function main(ns) {
   const logger = new Logger(ns)
   const servers = scanAll(ns)
 
-  // setUp(ns, servers, logger)
-  // getItems(ns, servers)
+  ns.tprint(servers)
 }
 
 // Define the function to get the shortest path between two servers
@@ -67,7 +66,9 @@ export function scanAll(ns) {
     const adjacentServers = ns.scan(server)
     servers.push(...adjacentServers)
   }
-  return explored.filter((server) => server !== 'home')
+  return explored
+    .filter((server) => server !== 'home')
+    .filter((server) => !server.includes('jake'))
 }
 
 /** @param {import(".").NS } ns */

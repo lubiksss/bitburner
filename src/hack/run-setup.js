@@ -12,6 +12,8 @@ export async function main(ns) {
 
   const isAllServerRooted = servers.every((server) => ns.hasRootAccess(server))
   while (!isAllServerRooted) {
+    const purchasedServers = ns.getPurchasedServers()
+    setScript(ns, purchasedServers)
     setUp(ns, servers, logger)
     await ns.sleep(5000)
   }

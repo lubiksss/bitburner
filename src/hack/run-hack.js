@@ -19,13 +19,19 @@ export async function main(ns) {
       return myHackingLevel >= serverHackingLevel
     })
 
+    const myServers = ns.getPurchasedServers()
+    const availableServers = rootedServers.concat(myServers).concat('home')
+
     for (const targetServer of hackableServers) {
-      for (const rootedServer of rootedServers.concat("home")) {
-        const serverRam = ns.getServerMaxRam(rootedServer)
-        const usedRam = ns.getServerUsedRam(rootedServer)
-        const availableRam = rootedServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
+      for (const availableServer of availableServers) {
+        const serverRam = ns.getServerMaxRam(availableServer)
+        const usedRam = ns.getServerUsedRam(availableServer)
+        const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
         if (availableRam >= neededRamToHack) {
-          ns.exec(`${ROOT_SRC}/hack.js`, rootedServer, 1, targetServer)
+          const result = ns.exec(`${ROOT_SRC}/hack.js`, availableServer, 1, targetServer)
+          if (result === 0) {
+            continue
+          }
           logger.info(`Hack ${targetServer}`)
           break
         } else {
@@ -33,6 +39,6 @@ export async function main(ns) {
         }
       }
     }
-    await ns.sleep(1000)
+    await ns.sleep(500)
   }
 }
