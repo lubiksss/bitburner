@@ -99,7 +99,7 @@ export function getItems(ns, servers) {
 export function setScript(ns, servers) {
   for (const server of servers) {
     const ROOT_PATH = '/src/hack'
-    const targetScript = [`${ROOT_PATH}/hack.js`, `${ROOT_PATH}/exp.js`]
+    const targetScript = [`${ROOT_PATH}/hack.js`, `${ROOT_PATH}/weaken.js`, `${ROOT_PATH}/grow.js`]
     ns.scp(targetScript, server, "home")
   }
 }

@@ -15,6 +15,7 @@ export async function main(ns) {
     const currentSecurityLevel = formatFloat(ns.getServerSecurityLevel(targetServer))
 
     const growthRate = ns.getServerGrowth(targetServer)
+    const hackChance = formatFloat(ns.hackAnalyzeChance(targetServer))
 
     const hackTime = formatTime(ns.getHackTime(targetServer))
     const growTime = formatTime(ns.getGrowTime(targetServer))
@@ -27,6 +28,7 @@ export async function main(ns) {
     ns.print(`currentSecurityLevel: ${currentSecurityLevel}`)
     ns.print("-----------------")
     ns.print(`growthRate: ${growthRate}`)
+    ns.print(`hackChance: ${hackChance}`)
     ns.print("-----------------")
     ns.print(`hackTime: ${hackTime}`)
     ns.print(`growTime: ${growTime}`)

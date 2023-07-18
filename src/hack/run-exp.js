@@ -12,7 +12,7 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
-  const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/exp.js`)
+  const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
   var myHackingLevel = ns.getHackingLevel()
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
@@ -34,7 +34,7 @@ export async function main(ns) {
       const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
       const threadCnt = Math.floor(availableRam / neededRamToExp)
       if (availableRam >= neededRamToExp) {
-        const result = ns.exec(`${ROOT_SRC}/exp.js`, availableServer, threadCnt, EXP_FARM)
+        const result = ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
         if (result === 0) {
           continue
         }
