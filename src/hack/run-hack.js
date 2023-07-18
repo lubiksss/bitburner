@@ -5,7 +5,7 @@ import {scanAll} from "/src/hack/scan";
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   const ROOT_SRC = '/src/hack'
-  const EXTRA_HOME_RAM = 5
+  const EXTRA_HOME_RAM = 20
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)

@@ -1,4 +1,6 @@
 /** @param {NS} ns */
+import {formatFloat, formatMoney, formatTime} from "/src/utils/formatter";
+
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   ns.disableLog('ALL')
@@ -33,26 +35,5 @@ export async function main(ns) {
     ns.print(`hackTime: ${hackTime}`)
     ns.print(`growTime: ${growTime}`)
     ns.print(`weakTime: ${weakTime}`)
-  }
-}
-
-function formatTime(number) {
-  return (number / 1000).toFixed(3);
-}
-
-function formatFloat(number) {
-  return (number).toFixed(3);
-}
-
-function formatMoney(number) {
-  const fractionDigits = 3;
-  if (number >= 1e9) {
-    return (number / 1e9).toFixed(fractionDigits) + 'g';
-  } else if (number >= 1e3) {
-    return (number / 1e6).toFixed(fractionDigits) + 'm';
-  } else if (number >= 1e3) {
-    return (number / 1e3).toFixed(fractionDigits) + 'k';
-  } else {
-    return number.toFixed(fractionDigits).toString();
   }
 }
