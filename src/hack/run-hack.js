@@ -38,7 +38,8 @@ export async function main(ns) {
           //go to next rooted server
         }
       }
+      await ns.sleep(50)
     }
-    await ns.sleep(500)
+    await ns.sleep(10)
   }
 }

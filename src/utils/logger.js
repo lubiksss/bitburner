@@ -43,9 +43,9 @@ export class Logger {
       this.ns.print(logMessage);
     }
 
-    if (this.combinedLogLevels.includes(level)) {
-      this.ns.write(this.logPath, logMessage, 'a');
-    }
+    // if (this.combinedLogLevels.includes(level)) {
+    //   this.ns.write(this.logPath, logMessage, 'a');
+    // }
     if (this.specificLogLevels.includes(level)) {
       this.ns.write(this.specificLogPath, logMessage, 'a');
     }
