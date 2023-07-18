@@ -6,16 +6,18 @@ import {scanAll} from "/src/hack/scan";
 export async function main(ns) {
   const ROOT_SRC = '/src/hack'
   const EXTRA_HOME_RAM = 5
-  const TARGET_HACK_LEVEL = 200
+  const TARGET_HACK_LEVEL = 50
   const EXP_FARM = 'joesguns'
 
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
   const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/exp.js`)
-  const myHackingLevel = ns.getHackingLevel()
+  var myHackingLevel = ns.getHackingLevel()
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
+    myHackingLevel = ns.getHackingLevel()
+
     const rootedServers = servers.filter((server) => ns.hasRootAccess(server))
     const hackableServers = rootedServers.filter((server) => {
       const myHackingLevel = ns.getHackingLevel()

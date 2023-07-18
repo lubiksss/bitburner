@@ -32,7 +32,7 @@ export async function main(ns) {
           if (result === 0) {
             continue
           }
-          logger.info(`Hack ${targetServer}`)
+          // logger.info(`Hack ${targetServer}`)
           break
         } else {
           //go to next rooted server

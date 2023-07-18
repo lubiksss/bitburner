@@ -7,13 +7,13 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
-  getItems(ns, servers)
   setScript(ns, servers)
 
   const isAllServerRooted = servers.every((server) => ns.hasRootAccess(server))
   while (!isAllServerRooted) {
     const purchasedServers = ns.getPurchasedServers()
     setScript(ns, purchasedServers)
+    getItems(ns, servers)
     setUp(ns, servers, logger)
     await ns.sleep(5000)
   }

@@ -73,6 +73,7 @@ export function scanAll(ns) {
 
 /** @param {import(".").NS } ns */
 export function getItems(ns, servers) {
+  ns.rm('cct.txt', "home")
   for (const server of servers) {
     const hasLit = ns.ls(server, 'lit').length > 0
     const hasTxt = ns.ls(server, 'txt').length > 0
@@ -89,7 +90,7 @@ export function getItems(ns, servers) {
     }
     if (hasCct) {
       for (const file of ns.ls(server, 'cct')) {
-        ns.write('cct.txt', `${server}\n`, 'w')
+        ns.write('cct.txt', `${server}\n`, 'a')
       }
     }
   }
