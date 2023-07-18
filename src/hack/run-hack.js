@@ -1,26 +1,19 @@
 import {Logger} from "/src/utils/logger";
-import {scanAll} from "/src/hack/scan";
+import {getAvailableServers, getHackableServers, scanAll} from "/src/utils/scan";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-  const ROOT_SRC = '/src/hack'
+  const ROOT_SRC = '/src/hack/basic'
   const EXTRA_HOME_RAM = 20
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
-  const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/hack.js`)
+  const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/all.js`)
 
   while (true) {
-    const rootedServers = servers.filter((server) => ns.hasRootAccess(server))
-    const hackableServers = rootedServers.filter((server) => {
-      const myHackingLevel = ns.getHackingLevel()
-      const serverHackingLevel = ns.getServerRequiredHackingLevel(server)
-      return myHackingLevel >= serverHackingLevel
-    })
-
-    const myServers = ns.getPurchasedServers()
-    const availableServers = rootedServers.concat(myServers).concat('home')
+    const hackableServers = getHackableServers(ns, servers)
+    const availableServers = getAvailableServers(ns, servers)
 
     for (const targetServer of hackableServers) {
       for (const availableServer of availableServers) {
@@ -28,7 +21,7 @@ export async function main(ns) {
         const usedRam = ns.getServerUsedRam(availableServer)
         const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
         if (availableRam >= neededRamToHack) {
-          const result = ns.exec(`${ROOT_SRC}/hack.js`, availableServer, 1, targetServer)
+          const result = ns.exec(`${ROOT_SRC}/all.js`, availableServer, 1, targetServer)
           if (result === 0) {
             continue
           }

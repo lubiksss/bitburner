@@ -1,7 +1,7 @@
 import {Logger} from '/src/utils/logger'
 
 /** @param {NS} ns */
-/** @param {import(".").NS } ns */
+/** @param {import("../hack").NS } ns */
 export async function main(ns) {
   const logger = new Logger(ns)
   const servers = scanAll(ns)
@@ -71,7 +71,7 @@ export function scanAll(ns) {
     .filter((server) => !server.includes('jake'))
 }
 
-/** @param {import(".").NS } ns */
+/** @param {import("../hack").NS } ns */
 export function getItems(ns, servers) {
   ns.rm('cct.txt', "home")
   for (const server of servers) {
@@ -98,13 +98,33 @@ export function getItems(ns, servers) {
 
 export function setScript(ns, servers) {
   for (const server of servers) {
-    const ROOT_PATH = '/src/hack'
-    const targetScript = [`${ROOT_PATH}/hack.js`, `${ROOT_PATH}/weaken.js`, `${ROOT_PATH}/grow.js`]
-    ns.scp(targetScript, server, "home")
+    const ROOT_PATH = '/src/hack/basic'
+    const targetScripts = ns.ls("home", ROOT_PATH)
+    ns.scp(targetScripts, server, "home")
   }
 }
 
-/** @param {import(".").NS } ns */
+export function getRootedServers(ns, servers) {
+  return servers.filter((server) => ns.hasRootAccess(server))
+}
+
+export function getHackableServers(ns, servers) {
+  const rootedServers = getRootedServers(ns, servers)
+  return rootedServers.filter((server) => {
+    const myHackingLevel = ns.getHackingLevel()
+    const serverHackingLevel = ns.getServerRequiredHackingLevel(server)
+    return myHackingLevel >= serverHackingLevel
+  })
+}
+
+export function getAvailableServers(ns, servers) {
+  const rootedServers = getRootedServers(ns, servers)
+
+  const myServers = ns.getPurchasedServers()
+  return rootedServers.concat(myServers).concat('home')
+}
+
+/** @param {import("../hack").NS } ns */
 export function setUp(ns, servers, logger) {
   const hasBruteSSH = ns.fileExists('/BruteSSH.exe')
   const hasFTPCrack = ns.fileExists('/FTPCrack.exe')

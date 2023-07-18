@@ -1,4 +1,4 @@
-import {getItems, scanAll, setScript, setUp} from "/src/hack/scan";
+import {getItems, scanAll, setScript, setUp} from "/src/utils/scan";
 import {Logger} from "/src/utils/logger";
 
 /** @param {NS} ns */

@@ -1,10 +1,10 @@
 import {Logger} from "/src/utils/logger";
-import {scanAll} from "/src/hack/scan";
+import {scanAll} from "/src/utils/scan";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-  const ROOT_SRC = '/src/hack'
+  const ROOT_SRC = '/src/hack/basic'
   const EXTRA_HOME_RAM = 5
   const TARGET_HACK_LEVEL = 50
   const EXP_FARM = 'joesguns'
