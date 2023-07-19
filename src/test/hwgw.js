@@ -56,17 +56,17 @@ export async function main(ns) {
 
   // https://bitburner.readthedocs.io/en/latest/advancedgameplay/hackingalgorithms.html?highlight=hwgw#batch-algorithms-hgw-hwgw-or-cycles
   if (availableServerThreads >= neededThreads) {
+    const delayHack = weakenTime - INTERVAL_TIME - hackTime
+    ns.exec(`${ROOT_SRC}/hack.js`, "home", hackThreadChanceMax, targetServer, delayHack)
+
     const delayFirstWeak = 0
     ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterHack, targetServer, delayFirstWeak)
-
-    const delaySecondWeak = 2 * INTERVAL_TIME
-    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterGrow, targetServer, delaySecondWeak)
 
     const delayGrow = weakenTime + INTERVAL_TIME - growTime
     ns.exec(`${ROOT_SRC}/grow.js`, "home", growthThread, targetServer, delayGrow)
 
-    const delayHack = weakenTime - INTERVAL_TIME - hackTime
-    ns.exec(`${ROOT_SRC}/hack.js`, "home", hackThreadChanceMax, targetServer, delayHack)
+    const delaySecondWeak = 2 * INTERVAL_TIME
+    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterGrow, targetServer, delaySecondWeak)
   } else {
     ns.tprint("There is not enough RAM to hack")
   }

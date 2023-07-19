@@ -1,4 +1,5 @@
 import {Logger} from '/src/utils/logger'
+import {floor} from "/src/utils/formatter";
 
 /** @param {NS} ns */
 /** @param {import("../hack").NS } ns */
@@ -127,6 +128,19 @@ export function getAvailableServers(ns, servers) {
 
   const myServers = ns.getPurchasedServers()
   return rootedServers.concat(myServers).concat('home')
+}
+
+export function getAvailableServerThreads(ns, servers, targetScript) {
+  const EXTRA_HOME_RAM = 50
+
+  return servers.map(
+    server => {
+      const serverRam = ns.getServerMaxRam(server)
+      const usedRam = ns.getServerUsedRam(server)
+      const availableRam = server === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
+      return floor(availableRam / targetScript)
+    }
+  ).reduce((a, b) => a + b, 0)
 }
 
 /** @param {import("../hack").NS } ns */
