@@ -20,11 +20,6 @@ export async function main(ns) {
     myHackingLevel = ns.getHackingLevel()
 
     const rootedServers = servers.filter((server) => ns.hasRootAccess(server))
-    const hackableServers = rootedServers.filter((server) => {
-      const myHackingLevel = ns.getHackingLevel()
-      const serverHackingLevel = ns.getServerRequiredHackingLevel(server)
-      return myHackingLevel >= serverHackingLevel
-    })
 
     const myServers = ns.getPurchasedServers()
     const availableServers = rootedServers.concat(myServers).concat('home')
@@ -40,12 +35,11 @@ export async function main(ns) {
           continue
         }
         // logger.info(`Hack ${EXP_FARM}`)
-        break
       } else {
         //go to next rooted server
       }
     }
-    await ns.sleep(50)
+    await ns.sleep(500)
   }
   logger.info(`End exp process`)
 }

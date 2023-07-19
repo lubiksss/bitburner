@@ -8,7 +8,7 @@ export async function main(ns) {
   const targetServer = ns.args[0]
 
   while (true) {
-    await ns.sleep(10)
+    await ns.sleep(5)
 
     const currentMoney = formatMoney(ns.getServerMoneyAvailable(targetServer))
     const maxMoney = formatMoney(ns.getServerMaxMoney(targetServer))
@@ -23,8 +23,9 @@ export async function main(ns) {
     const growTime = formatTime(ns.getGrowTime(targetServer))
     const weakTime = formatTime(ns.getWeakenTime(targetServer))
 
+    ns.print("=================")
     ns.print(targetServer)
-    ns.print("-----------------")
+    ns.print("=================")
     ns.print(`currentMoney: ${currentMoney}`)
     ns.print(`maxMoney: ${maxMoney}`)
     ns.print("-----------------")

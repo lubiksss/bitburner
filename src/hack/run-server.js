@@ -7,7 +7,10 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   let TARGET_SERVER_SIZE = 256
-  let MAX_TARGET_SERVER_SIZE = 8192
+  let MAX_TARGET_SERVER_SIZE = ns.args[0]
+  if (MAX_TARGET_SERVER_SIZE === undefined) {
+    MAX_TARGET_SERVER_SIZE = 8192
+  }
 
   while (true) {
     const purchasedServer = ns.getPurchasedServers()
