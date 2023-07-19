@@ -6,7 +6,12 @@ export async function main(ns) {
   const logger = new Logger(ns)
   const servers = scanAll(ns)
 
-  ns.tprint(servers)
+  const growthRates = servers.map((server) => {
+    return `${server}: ${ns.getServerGrowth(server)}`
+  })
+    .join("\n")
+
+  ns.tprint(growthRates)
 }
 
 // Define the function to get the shortest path between two servers

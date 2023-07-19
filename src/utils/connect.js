@@ -11,9 +11,12 @@ export async function main(ns) {
   const command = exceptHome
     .map((server) => `connect ${server}`)
     .join(";")
-  const terminalInput = document.getElementById("terminal-input");
-  terminalInput.value = command
-  const handler = Object.keys(terminalInput)[1];
-  terminalInput[handler].onChange({target: terminalInput});
-  terminalInput[handler].onKeyDown({key: 'Enter', preventDefault: () => null});
+
+  navigator.clipboard.writeText(command)
+  ns.tprint("Copy command to clipboard")
+  // const terminalInput = document.getElementById("terminal-input");
+  // terminalInput.value = command
+  // const handler = Object.keys(terminalInput)[1];
+  // terminalInput[handler].onChange({target: terminalInput});
+  // terminalInput[handler].onKeyDown({key: 'Enter', preventDefault: () => null});
 }

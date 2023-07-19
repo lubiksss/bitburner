@@ -8,7 +8,7 @@ export async function main(ns) {
   const targetServer = ns.args[0]
 
   while (true) {
-    await ns.sleep(100)
+    await ns.sleep(10)
 
     const currentMoney = formatMoney(ns.getServerMoneyAvailable(targetServer))
     const maxMoney = formatMoney(ns.getServerMaxMoney(targetServer))

@@ -5,15 +5,15 @@ import {Logger} from "src/utils/logger";
 export async function main(ns) {
   const ROOT_SRC = '/src/hack'
   const ROOT_WATCHER_SRC = '/src/watcher'
+  const WATHER_SERVER = 'n00dles'
   const logger = new Logger(ns)
 
   if (ns.isRunning('run-setup.js', 'home')) {
     ns.exit()
   }
   logger.info(`Start watcher`)
-  ns.run(`${ROOT_WATCHER_SRC}/tailWatcher.js`, 1, "n00dles")
-  ns.tail(`${ROOT_WATCHER_SRC}/tailWatcher.js`, "home", "n00dles")
-
+  ns.run(`${ROOT_WATCHER_SRC}/tailWatcher.js`, 1, WATHER_SERVER)
+  ns.tail(`${ROOT_WATCHER_SRC}/tailWatcher.js`, "home", WATHER_SERVER)
   logger.info(`Start setup process`)
   ns.exec(`${ROOT_SRC}/run-setup.js`, "home", 1)
 
@@ -25,5 +25,5 @@ export async function main(ns) {
   } while (ns.isRunning(`${ROOT_SRC}/run-exp.js`, 'home'))
 
   logger.info(`Start hack process`)
-  ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1)
+  ns.exec(`${ROOT_SRC}/run-HWGW.js`, "home", 1)
 }
