@@ -76,25 +76,26 @@ export async function main(ns) {
         const neededThreads = hackThreadChanceMax + weakenThreadAfterHack + growthThread + weakenThreadAfterGrow
         const availableServerThreads = floor(availableRam / SCRIPT_RAM)
 
-
         // https://bitburner.readthedocs.io/en/latest/advancedgameplay/hackingalgorithms.html?highlight=hwgw#batch-algorithms-hgw-hwgw-or-cycles
         if (availableServerThreads >= neededThreads) {
-          ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, weakenThreadAfterGrow, targetServer)
-          await ns.sleep(INTERVAL_TIME * 2)
+          const delayFirstWeak = 0
+          ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, weakenThreadAfterHack, targetServer, delayFirstWeak)
 
-          ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, weakenThreadAfterGrow, targetServer)
-          await ns.sleep(weakenTime - growTime - INTERVAL_TIME)
+          const delaySecondWeak = 2 * INTERVAL_TIME
+          ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, weakenThreadAfterGrow, targetServer, delaySecondWeak)
 
-          ns.exec(`${ROOT_SRC}/grow.js`, availableServer, growthThread, targetServer)
-          await ns.sleep(growTime - hackTime - (INTERVAL_TIME * 2))
+          const delayGrow = weakenTime + INTERVAL_TIME - growTime
+          ns.exec(`${ROOT_SRC}/grow.js`, availableServer, growthThread, targetServer, delayGrow)
 
-          ns.exec(`${ROOT_SRC}/hack.js`, availableServer, hackThreadChanceMax, targetServer)
-          // after this code sleep at least 3 interval
+          const delayHack = weakenTime - INTERVAL_TIME - hackTime
+          ns.exec(`${ROOT_SRC}/hack.js`, availableServer, hackThreadChanceMax, targetServer, delayHack)
         } else {
-          // next to the target server
+          // go to next server
+          continue
         }
+        await ns.sleep(10 * INTERVAL_TIME)
       }
-      await ns.sleep(hackTime + 3 * INTERVAL_TIME)
+      await ns.sleep(100)
     }
   }
 }

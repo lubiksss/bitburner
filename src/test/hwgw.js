@@ -1,8 +1,8 @@
 import {Logger} from "/src/utils/logger";
-import {ceil} from "src/utils/formatter";
+import {ceil, floor} from "src/utils/formatter";
 
 /** @param {NS} ns */
-/** @param {import(".").NS } ns */
+/** @param {import("../hack").NS } ns */
 export async function main(ns) {
   const EXTRA_HOME_RAM = 20
 
@@ -12,6 +12,7 @@ export async function main(ns) {
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
   const INTERVAL_TIME = 50
+  const SCRIPT_RAM = 1.75
 
   const targetServer = 'n00dles'
 
@@ -50,23 +51,22 @@ export async function main(ns) {
   const usedRam = ns.getServerUsedRam(availableServer)
   const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
 
-  const neededRam =
-    hackThreadChanceMax * neededRamToHack
-    + growthThread * neededRamToGrow
-    + weakenThreadAfterGrow * neededRamToWeaken
+  const neededThreads = hackThreadChanceMax + weakenThreadAfterHack + growthThread + weakenThreadAfterGrow
+  const availableServerThreads = floor(availableRam / SCRIPT_RAM)
 
-  if (availableRam >= neededRam) {
-    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterGrow, targetServer)
-    await ns.sleep(INTERVAL_TIME * 2)
+  // https://bitburner.readthedocs.io/en/latest/advancedgameplay/hackingalgorithms.html?highlight=hwgw#batch-algorithms-hgw-hwgw-or-cycles
+  if (availableServerThreads >= neededThreads) {
+    const delayFirstWeak = 0
+    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterHack, targetServer, delayFirstWeak)
 
-    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterGrow, targetServer)
-    await ns.sleep(weakenTime - growTime - INTERVAL_TIME)
+    const delaySecondWeak = 2 * INTERVAL_TIME
+    ns.exec(`${ROOT_SRC}/weaken.js`, "home", weakenThreadAfterGrow, targetServer, delaySecondWeak)
 
-    ns.exec(`${ROOT_SRC}/grow.js`, "home", growthThread, targetServer)
-    await ns.sleep(growTime - hackTime - (INTERVAL_TIME * 2))
+    const delayGrow = weakenTime + INTERVAL_TIME - growTime
+    ns.exec(`${ROOT_SRC}/grow.js`, "home", growthThread, targetServer, delayGrow)
 
-    ns.exec(`${ROOT_SRC}/hack.js`, "home", hackThreadChanceMax, targetServer)
-    // after this code sleep at least 3 interval
+    const delayHack = weakenTime - INTERVAL_TIME - hackTime
+    ns.exec(`${ROOT_SRC}/hack.js`, "home", hackThreadChanceMax, targetServer, delayHack)
   } else {
     ns.tprint("There is not enough RAM to hack")
   }
