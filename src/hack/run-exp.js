@@ -39,7 +39,7 @@ export async function main(ns) {
         //go to next rooted server
       }
     }
-    await ns.sleep(500)
+    await ns.sleep(100)
   }
   logger.info(`End exp process`)
 }

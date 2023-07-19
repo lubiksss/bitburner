@@ -3,6 +3,8 @@ import {howToGetServer} from "/src/utils/scan"
 /** @param {NS} ns */
 /** @param {import("../hack").NS } ns */
 export async function main(ns) {
+  //TODO
+  // https://bitburner.readthedocs.io/en/latest/netscript/advancedfunctions/autocomplete.html?highlight=flags
   const startServer = "home"
   const targetServer = ns.args[0]
 
