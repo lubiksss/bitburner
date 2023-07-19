@@ -1,6 +1,7 @@
 import {Logger} from "/src/utils/logger";
 import {getAvailableServers, getAvailableServerThreads, scanAll} from "/src/utils/scan";
 import {ceil, floor} from "/src/utils/formatter";
+import {availableHwgw} from "/src/utils/hwgw";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
@@ -10,7 +11,7 @@ export async function main(ns) {
   const ROOT_SRC = '/src/hack/basic'
   const EXTRA_HOME_RAM = 20
 
-  const INTERVAL_TIME = 50
+  const INTERVAL_TIME = 10
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
@@ -19,6 +20,7 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
+  // don't use, because they are all 1.75(1.70)
   const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/hack.js`)
   const neededRamToGrow = ns.getScriptRam(`${ROOT_SRC}/grow.js`)
   const neededRamToWeaken = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
@@ -33,11 +35,6 @@ export async function main(ns) {
       const hackTime = ns.getHackTime(targetServer)
       const growTime = ns.getGrowTime(targetServer)
       const weakenTime = ns.getWeakenTime(targetServer)
-
-      // don't use, because they are all 1.75(1.70)
-      // const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/hack.js`)
-      // const neededRamToGrow = ns.getScriptRam(`${ROOT_SRC}/grow.js`)
-      // const neededRamToWeaken = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
 
       const currentMoney = ns.getServerMoneyAvailable(targetServer)
       const targetMoney = currentMoney * HACK_MONEY_MULTIPLIER
@@ -60,52 +57,50 @@ export async function main(ns) {
       const securityLevelAfterGrow = ns.getServerSecurityLevel(targetServer) + aroseSecByGrowth
       const weakenThreadAfterGrow = ceil((securityLevelAfterGrow - minSecurityLevel) / WEAKEN_SEC_MULTIPLIER)
 
-      const hwgw = [hackThreadChanceMax, weakenThreadAfterHack, growthThread, weakenThreadAfterGrow]
+      let hwgw = [hackThreadChanceMax, weakenThreadAfterHack, growthThread, weakenThreadAfterGrow]
       const neededThreads = hwgw.reduce((a, b) => a + b, 0)
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM)
 
-      const hwgwQue = hwgw.flatMap((num, i) => {
-        if (i === 0) {
-          return Array(num).fill('h')
-        } else if (i === 1) {
-          return Array(num).fill('wh')
-        } else if (i === 2) {
-          return Array(num).fill('g')
-        } else if (i === 3) {
-          return Array(num).fill('wg')
-        }
-      })
-
       if (availableServerThreads >= neededThreads) {
         for (const availableServer of availableServers) {
+          if (hwgw.reduce((a, b) => a + b, 0) === 0) {
+            break
+          }
           const serverRam = ns.getServerMaxRam(availableServer)
           const usedRam = ns.getServerUsedRam(availableServer)
           const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
           const availableThreads = floor(availableRam / SCRIPT_RAM)
 
-          for (const _ of Array(availableThreads).fill(1)) {
-            const neededFunc = hwgwQue.shift()
+          const availableTask = availableHwgw(hwgw, availableThreads)[0]
 
-            if (neededFunc === 'h') {
-              const delayHack = weakenTime - INTERVAL_TIME - hackTime
-              ns.exec(`${ROOT_SRC}/hack.js`, availableServer, 1, targetServer, delayHack)
-              // logger.info("hack")
-            } else if (neededFunc === 'wh') {
-              const delayFirstWeak = 0
-              ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, 1, targetServer, delayFirstWeak)
-              // logger.info("weak hack")
-            } else if (neededFunc === 'g') {
-              const delayGrow = weakenTime + INTERVAL_TIME - growTime
-              ns.exec(`${ROOT_SRC}/grow.js`, availableServer, 1, targetServer, delayGrow)
-              // logger.info("grow")
-            } else if (neededFunc === 'wg') {
-              const delaySecondWeak = 2 * INTERVAL_TIME
-              ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, 1, targetServer, delaySecondWeak)
-              // logger.info("weak grow")
-            } else {
-              break
+          availableTask.map((threadCnt, i) => {
+            if (i === 0) {
+              if (threadCnt !== 0) {
+                const delayHack = weakenTime - INTERVAL_TIME - hackTime
+                ns.exec(`${ROOT_SRC}/hack.js`, availableServer, threadCnt, targetServer, delayHack)
+                // logger.info("hack")
+              }
+            } else if (i === 1) {
+              if (threadCnt !== 0) {
+                const delayFirstWeak = 0
+                ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, targetServer, delayFirstWeak)
+                // logger.info("weak hack")
+              }
+            } else if (i === 2) {
+              if (threadCnt !== 0) {
+                const delayGrow = weakenTime + INTERVAL_TIME - growTime
+                ns.exec(`${ROOT_SRC}/grow.js`, availableServer, threadCnt, targetServer, delayGrow)
+                // logger.info("grow")
+              }
+            } else if (i === 3) {
+              if (threadCnt !== 0) {
+                const delaySecondWeak = 2 * INTERVAL_TIME
+                ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, targetServer, delaySecondWeak)
+                // logger.info("weak grow")
+              }
             }
-          }
+          })
+          hwgw = availableHwgw(hwgw, availableThreads)[1]
         }
       }
       await ns.sleep(10 * INTERVAL_TIME)

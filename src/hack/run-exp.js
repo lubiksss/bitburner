@@ -13,7 +13,7 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
-  var myHackingLevel = ns.getHackingLevel()
+  let myHackingLevel = ns.getHackingLevel()
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
     myHackingLevel = ns.getHackingLevel()

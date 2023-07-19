@@ -9,13 +9,14 @@ export async function main(ns) {
   const servers = scanAll(ns)
   setScript(ns, servers)
 
-  const isAllServerRooted = servers.every((server) => ns.hasRootAccess(server))
-  while (!isAllServerRooted) {
+  // const isAllServerRooted = servers.every((server) => ns.hasRootAccess(server))
+  // while (!isAllServerRooted) {
+  while (true) {
     const purchasedServers = ns.getPurchasedServers()
     setScript(ns, purchasedServers)
     getItems(ns, servers)
     setUp(ns, servers, logger)
     await ns.sleep(5000)
   }
-  logger.info(`End setup process`)
+  // logger.info(`End setup process`)
 }

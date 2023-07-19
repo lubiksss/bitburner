@@ -14,6 +14,7 @@ export async function main(ns) {
   logger.info(`Start watcher`)
   ns.run(`${ROOT_WATCHER_SRC}/tailWatcher.js`, 1, WATHER_SERVER)
   ns.tail(`${ROOT_WATCHER_SRC}/tailWatcher.js`, "home", WATHER_SERVER)
+
   logger.info(`Start setup process`)
   ns.exec(`${ROOT_SRC}/run-setup.js`, "home", 1)
 
@@ -25,5 +26,5 @@ export async function main(ns) {
   } while (ns.isRunning(`${ROOT_SRC}/run-exp.js`, 'home'))
 
   logger.info(`Start hack process`)
-  ns.exec(`${ROOT_SRC}/run-HWGW.js`, "home", 1)
+  ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1)
 }
