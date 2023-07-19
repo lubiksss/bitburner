@@ -8,36 +8,46 @@ export async function main(ns) {
   let TARGET_SERVER_SIZE = 2048
   let MAX_TARGET_SERVER_SIZE = 8192
 
-  let cnt = 0
-  let isFirstPurchase = true
-
   while (true) {
-    if (cnt > 24) {
-      if (TARGET_SERVER_SIZE > MAX_TARGET_SERVER_SIZE) {
+    const purchasedServer = ns.getPurchasedServers()
+
+    if (purchasedServer.length < 25) {
+      //buy process
+      const cnt = purchasedServer.length
+      const serverName = `jake-${cnt}-${TARGET_SERVER_SIZE}`
+      const isPurchased = ns.purchaseServer(serverName, TARGET_SERVER_SIZE)
+      if (isPurchased !== '') {
+        logger.info(`Purchase server: ${serverName}`)
+      }
+    } else {
+      //upgrade process
+      const sortedPurchasedServer = sortByLastNumber(purchasedServer)
+      const targetServer = sortedPurchasedServer.find((server) => ns.getServerMaxRam(server) < MAX_TARGET_SERVER_SIZE)
+      if (targetServer === undefined) {
         break
       }
-      TARGET_SERVER_SIZE = TARGET_SERVER_SIZE * 2
-      cnt = 0
-      isFirstPurchase = false
-    } else {
-      if (isFirstPurchase) {
-        const serverName = ns.purchaseServer(`jake-${cnt++}-${TARGET_SERVER_SIZE}`, TARGET_SERVER_SIZE)
-        if (serverName === '') {
-          //nothing
-        } else {
-          logger.info(`Purchase server: ${serverName}`)
-        }
-      } else {
-        const isUpgraded = ns.upgradePurchasedServer(`jake-${cnt++}-${TARGET_SERVER_SIZE / 2}`, TARGET_SERVER_SIZE)
-        const serverName = `jake-${cnt}-${TARGET_SERVER_SIZE}`
-        if (isUpgraded === true) {
-          logger.info(`Upgrade server: ${serverName}`)
-        } else {
-          //nothing
-        }
+      const currentSize = ns.getServerMaxRam(targetServer)
+      const isUpgraded = ns.upgradePurchasedServer(targetServer, currentSize * 2)
+      if (isUpgraded) {
+        const newName = targetServer.replace(`${currentSize}`, `${currentSize * 2}`)
+        ns.renamePurchasedServer(targetServer, newName)
+        logger.info(`Upgrade server: ${newName}`)
       }
     }
-    await ns.sleep(500)
+    await ns.sleep(100)
   }
   logger.info(`End server purchase process`)
+}
+
+function sortByLastNumber(inputArray) {
+  // Custom sorting function based on the last number of each element
+  function compareLastNumbers(a, b) {
+    const lastNumberA = parseInt(a.split('-').pop());
+    const lastNumberB = parseInt(b.split('-').pop());
+
+    return lastNumberA - lastNumberB;
+  }
+
+  // Sort the input array using the custom sorting function
+  return inputArray.sort(compareLastNumbers);
 }

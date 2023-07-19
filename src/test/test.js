@@ -7,6 +7,7 @@ export async function main(ns) {
 
   const purchasedServer = ns.getPurchasedServers()
   ns.tprint(purchasedServer)
+  ns.tprint(purchasedServer.length)
   for (const server of purchasedServer) {
     ns.killall(server)
     ns.deleteServer(server)
