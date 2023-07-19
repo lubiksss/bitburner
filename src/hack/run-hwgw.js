@@ -104,7 +104,7 @@ export async function main(ns) {
           hwgw = availableHwgw(hwgw, availableThreads)[1]
         }
       }
-      await ns.sleep(3 * INTERVAL_TIME)
+      await ns.sleep(5 * INTERVAL_TIME)
     }
   }
 }

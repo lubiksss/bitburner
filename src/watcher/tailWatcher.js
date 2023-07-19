@@ -23,6 +23,8 @@ export async function main(ns) {
     const growTime = formatTime(ns.getGrowTime(targetServer))
     const weakTime = formatTime(ns.getWeakenTime(targetServer))
 
+    ns.print(targetServer)
+    ns.print("-----------------")
     ns.print(`currentMoney: ${currentMoney}`)
     ns.print(`maxMoney: ${maxMoney}`)
     ns.print("-----------------")

@@ -3,10 +3,11 @@ import {Logger} from "/src/utils/logger";
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
+  ns.disableLog('ALL')
   const logger = new Logger(ns)
 
   let TARGET_SERVER_SIZE = 256
-  let MAX_TARGET_SERVER_SIZE = 8192 * 2
+  let MAX_TARGET_SERVER_SIZE = 8192
 
   while (true) {
     const purchasedServer = ns.getPurchasedServers()
@@ -17,7 +18,7 @@ export async function main(ns) {
       const serverName = `jake-${cnt}-${TARGET_SERVER_SIZE}`
       const isPurchased = ns.purchaseServer(serverName, TARGET_SERVER_SIZE)
       if (isPurchased !== '') {
-        logger.info(`Purchase server: ${serverName}`)
+        logger.info(`Purchase: ${serverName}`)
       }
     } else {
       //upgrade process
@@ -31,7 +32,7 @@ export async function main(ns) {
       if (isUpgraded) {
         const newName = targetServer.replace(`${currentSize}`, `${currentSize * 2}`)
         ns.renamePurchasedServer(targetServer, newName)
-        logger.info(`Upgrade server: ${newName}`)
+        logger.info(`Upgrade: ${newName}`)
       }
     }
     await ns.sleep(100)
