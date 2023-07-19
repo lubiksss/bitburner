@@ -5,12 +5,4 @@ import {Logger} from "/src/utils/logger";
 export async function main(ns) {
   const logger = new Logger(ns)
 
-  const purchasedServer = ns.getPurchasedServers()
-  ns.tprint(purchasedServer)
-  ns.tprint(purchasedServer.length)
-  for (const server of purchasedServer) {
-    ns.killall(server)
-    ns.deleteServer(server)
-    ns.tprint(`Delete server: ${server}`)
-  }
 }

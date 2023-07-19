@@ -4,9 +4,10 @@ import {scanAll} from "/src/utils/scan";
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
+  const EXTRA_HOME_RAM = ns.args[0]
+  const TARGET_HACK_LEVEL = ns.args[1]
+  ns.tprint(`Target hack level: ${TARGET_HACK_LEVEL}`)
   const ROOT_SRC = '/src/hack/basic'
-  const EXTRA_HOME_RAM = 5
-  const TARGET_HACK_LEVEL = 50
   const EXP_FARM = 'joesguns'
 
   const logger = new Logger(ns)
