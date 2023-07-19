@@ -9,7 +9,7 @@ export async function main(ns) {
   ns.disableLog('ALL')
 
   const ROOT_SRC = '/src/hack/basic'
-  const EXTRA_HOME_RAM = 20
+  const EXTRA_HOME_RAM = 100
 
   const INTERVAL_TIME = 5
   const GROW_SEC_MULTIPLIER = 0.004
@@ -30,6 +30,7 @@ export async function main(ns) {
     const availableServers = getAvailableServers(ns, servers)
 
     // because of growth rate, first only hack n00dles server
+    // for (const targetServer of availableServers) {
     for (const targetServer of ['n00dles']) {
 
       const hackTime = ns.getHackTime(targetServer)
@@ -59,7 +60,7 @@ export async function main(ns) {
 
       let hwgw = [hackThreadChanceMax, weakenThreadAfterHack, growthThread, weakenThreadAfterGrow]
       const neededThreads = hwgw.reduce((a, b) => a + b, 0)
-      const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM)
+      const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
       if (availableServerThreads >= neededThreads) {
         for (const availableServer of availableServers) {

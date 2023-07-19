@@ -8,7 +8,7 @@ export async function main(ns) {
   const WATHER_SERVER = 'n00dles'
   const logger = new Logger(ns)
 
-  if (ns.isRunning('run-setup.js', 'home')) {
+  if (ns.isRunning('start.js', 'home')) {
     ns.exit()
   }
   logger.info(`Start watcher`)

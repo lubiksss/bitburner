@@ -4,7 +4,7 @@ import {ceil, floor} from "src/utils/formatter";
 /** @param {NS} ns */
 /** @param {import("../hack").NS } ns */
 export async function main(ns) {
-  const EXTRA_HOME_RAM = 20
+  const EXTRA_HOME_RAM = 100
 
   const logger = new Logger(ns)
   const ROOT_SRC = '/src/hack/basic'

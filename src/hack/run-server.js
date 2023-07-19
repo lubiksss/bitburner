@@ -5,8 +5,8 @@ import {Logger} from "/src/utils/logger";
 export async function main(ns) {
   const logger = new Logger(ns)
 
-  let TARGET_SERVER_SIZE = 2048
-  let MAX_TARGET_SERVER_SIZE = 8192
+  let TARGET_SERVER_SIZE = 256
+  let MAX_TARGET_SERVER_SIZE = 8192 * 2
 
   while (true) {
     const purchasedServer = ns.getPurchasedServers()

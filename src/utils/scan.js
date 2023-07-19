@@ -130,9 +130,7 @@ export function getAvailableServers(ns, servers) {
   return rootedServers.concat(myServers).concat('home')
 }
 
-export function getAvailableServerThreads(ns, servers, targetScript) {
-  const EXTRA_HOME_RAM = 50
-
+export function getAvailableServerThreads(ns, servers, targetScript, extraHomeRam) {
   return servers.map(
     server => {
       const serverRam = ns.getServerMaxRam(server)
