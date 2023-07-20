@@ -9,6 +9,10 @@ export function formatTime(number) {
   return (number / 1000).toFixed(FRACTION_DIGITS);
 }
 
+export function formatTime2(number) {
+  return (number / 1000).toFixed(FRACTION_DIGITS * 2);
+}
+
 export function floor(number) {
   return Math.floor(number);
 }

@@ -1,5 +1,5 @@
 /** @param {NS} ns */
-import {formatFloat, formatMoney, formatTime} from "/src/utils/formatter";
+import {formatFloat, formatMoney, formatTime2} from "/src/utils/formatter";
 
 /** @param {import(".").NS } ns */
 export async function main(ns) {
@@ -21,9 +21,9 @@ export async function main(ns) {
     const growthRate = ns.getServerGrowth(targetServer)
     const hackChance = formatFloat(ns.hackAnalyzeChance(targetServer))
 
-    const hackTime = formatTime(ns.getHackTime(targetServer))
-    const growTime = formatTime(ns.getGrowTime(targetServer))
-    const weakTime = formatTime(ns.getWeakenTime(targetServer))
+    const hackTime = formatTime2(ns.getHackTime(targetServer))
+    const growTime = formatTime2(ns.getGrowTime(targetServer))
+    const weakTime = formatTime2(ns.getWeakenTime(targetServer))
 
     ns.print("=================")
     ns.print(targetServer)

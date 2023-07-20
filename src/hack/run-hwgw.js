@@ -11,7 +11,7 @@ export async function main(ns) {
 
   const ROOT_SRC = '/src/hack/basic'
 
-  const INTERVAL_TIME = 5
+  const INTERVAL_TIME = 1
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
@@ -104,7 +104,7 @@ export async function main(ns) {
           hwgw = availableHwgw(hwgw, availableThreads)[1]
         }
       }
-      await ns.sleep(5 * INTERVAL_TIME)
+      await ns.sleep(4 * INTERVAL_TIME)
     }
   }
 }
