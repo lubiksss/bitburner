@@ -8,3 +8,7 @@ export async function main(ns) {
   ns.exec(`${ROOT_SRC}/tailWatcher.js`, "home", 1, targetServer)
   ns.tail(`${ROOT_SRC}/tailWatcher.js`, "home", targetServer)
 }
+
+export function autocomplete(data, args) {
+  return [...data.servers];
+}

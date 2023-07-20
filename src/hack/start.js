@@ -2,6 +2,7 @@ import {Logger} from "src/utils/logger";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
+
 export async function main(ns) {
   const data = ns.flags([
     ['doSetup', true],
@@ -64,4 +65,18 @@ export async function main(ns) {
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
   }
+}
+
+export function autocomplete(data, args) {
+  const serverSizes = [...Array(21).keys()].map((i) => Math.pow(2, i))
+  return [
+    "--doSetup",
+    "--doPurchaseServer",
+    "--doFarmExp",
+    "--doHack",
+    "--extraHomeRamRatio",
+    "--maxPurchaseServerSize",
+    "--targetHackLevel",
+    ...serverSizes
+  ]
 }

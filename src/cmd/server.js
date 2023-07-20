@@ -8,3 +8,7 @@ export async function main(ns) {
   ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_TARGET_SERVER_SIZE)
   ns.tail(`${ROOT_SRC}/run-server.js`, "home", MAX_TARGET_SERVER_SIZE)
 }
+
+export function autocomplete(data, args) {
+  return [...Array(21).keys()].map((i) => Math.pow(2, i))
+}
