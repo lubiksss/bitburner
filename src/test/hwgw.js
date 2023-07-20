@@ -11,7 +11,7 @@ export async function main(ns) {
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
-  const INTERVAL_TIME = 50
+  const INTERVAL_TIME = 5
   const SCRIPT_RAM = 1.75
 
   const targetServer = 'n00dles'

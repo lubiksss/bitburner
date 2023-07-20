@@ -51,7 +51,7 @@ export async function main(ns) {
       const maxMoney = ns.getServerMaxMoney(targetServer)
       const moneyAfterHack = 1
       const growthThread = ceil(ns.growthAnalyze(targetServer, maxMoney / moneyAfterHack))
-      // ns.growthAnalyze() function has a bug
+      // ns.growthAnalyzeSecurity() function has a bug
       // const aroseSecByGrowth = ns.growthAnalyzeSecurity(1, targetServer)
       const aroseSecByGrowth = growthThread * GROW_SEC_MULTIPLIER
 
