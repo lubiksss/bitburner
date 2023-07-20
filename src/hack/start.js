@@ -22,7 +22,7 @@ export async function main(ns) {
 
   const ROOT_SRC = '/src/hack'
   const ROOT_WATCHER_SRC = '/src/watcher'
-  const WATCHER_TARGETS = ['n00dles']
+  const WATCHER_TARGETS = ['n00dles', 'joesguns']
 
   const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
 
@@ -32,6 +32,11 @@ export async function main(ns) {
     .filter((script) => script.filename.includes("run") || script.filename.includes("watch"))
     .map((script) => script.pid)
   runningScripts.forEach((pid) => ns.kill(pid, 'home'))
+
+  const runningTails = ns.ps('home')
+    .filter((script) => script.filename.includes("tail"))
+    .map((script) => script.pid)
+  runningScripts.forEach((pid) => ns.closeTail(pid))
 
   logger.info(`Start watcher`)
   WATCHER_TARGETS.forEach((WATCHER_TARGET) => {
@@ -47,6 +52,7 @@ export async function main(ns) {
   if (DO_PURCHASE_SERVER) {
     logger.info(`Start server purchase process`)
     ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
+    ns.tail(`${ROOT_SRC}/run-server.js`, "home", MAX_PURCHASE_SERVER_SIZE)
   }
 
   if (DO_FARM_EXP) {
@@ -55,7 +61,6 @@ export async function main(ns) {
   }
 
   if (DO_HACK) {
-    ns.kill(`${ROOT_SRC}/run-hwgw.js`, "home", EXTRA_HOME_RAM)
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
   }

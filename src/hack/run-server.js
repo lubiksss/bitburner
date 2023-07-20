@@ -21,7 +21,7 @@ export async function main(ns) {
       const serverName = `jake-${cnt}-${TARGET_SERVER_SIZE}`
       const isPurchased = ns.purchaseServer(serverName, TARGET_SERVER_SIZE)
       if (isPurchased !== '') {
-        logger.info(`Purchase: ${serverName}`)
+        logger.warn(`Purchase: ${serverName}`)
       }
     } else {
       //upgrade process
@@ -35,7 +35,7 @@ export async function main(ns) {
       if (isUpgraded) {
         const newName = targetServer.replace(`${currentSize}`, `${currentSize * 2}`)
         ns.renamePurchasedServer(targetServer, newName)
-        logger.info(`Upgrade: ${newName}`)
+        logger.warn(`Upgrade: ${newName}`)
       }
     }
     await ns.sleep(100)

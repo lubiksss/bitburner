@@ -8,6 +8,8 @@ export async function main(ns) {
   const targetServer = ns.args[0]
 
   while (true) {
+    //TODO
+    // connect joesguns;connect nectar-net;connect omega-net;connect johnson-ortho;connect I.I.I.I
     await ns.sleep(5)
 
     const currentMoney = formatMoney(ns.getServerMoneyAvailable(targetServer))
