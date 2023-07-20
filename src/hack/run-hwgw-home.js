@@ -11,6 +11,7 @@ export async function main(ns) {
 
   const ROOT_SRC = '/src/hack/basic'
 
+  //it works properly at least INTERVAL_TIME > 100
   const INTERVAL_TIME = 100
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
@@ -23,11 +24,8 @@ export async function main(ns) {
   const servers = scanAll(ns)
   while (true) {
     const hackableServers = getHackableServers(ns, servers)
-      .filter((server) => server === '4sigma')
     const availableServers = ["home"]
 
-    // because of growth rate, first only hack n00dles server
-    // for (const targetServer of availableServers) {
     for (const targetServer of hackableServers) {
 
       const hackTime = ns.getHackTime(targetServer)
@@ -48,6 +46,9 @@ export async function main(ns) {
 
       const maxMoney = ns.getServerMaxMoney(targetServer)
       const moneyAfterHack = 1
+      if (maxMoney === 0) {
+        continue
+      }
       const growthThread = ceil(ns.growthAnalyze(targetServer, maxMoney / moneyAfterHack, CPU_CORE))
       // ns.growthAnalyzeSecurity() function has a bug
       // const aroseSecByGrowth = ns.growthAnalyzeSecurity(1, targetServer)
