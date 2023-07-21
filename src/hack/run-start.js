@@ -30,7 +30,7 @@ export async function main(ns) {
     ns.moveTail(470, 0, target)
 
     const PORT_THRESHOLD = 3
-    const THREAD_THRESHOLD = 500
+    const THREAD_THRESHOLD = 400
     const INTERVAL_THRESHOLD = 1024
     const HWGW_HOME_THRESHOLD = 8192
 
@@ -51,15 +51,20 @@ export async function main(ns) {
     // buy all program
 
     while (!firstLevel) {
-      await ns.sleep(10000)
       availableServers = getAvailableServers(ns, servers)
       maxThreads = getMaxServerThreads(ns, availableServers, 1.75, EXTRA_HOME_RAM)
       firstLevel = maxThreads > THREAD_THRESHOLD
 
       logger.warn(`maxThr: ${maxThreads}`)
+      await ns.sleep(10000)
     }
 
-    let leastServerSize = 1
+    let leastServerSize
+    if (ns.getPurchasedServers().length > 1) {
+      leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
+    } else {
+      leastServerSize = 1
+    }
     let secondLevel = leastServerSize > INTERVAL_THRESHOLD
 
     if (!secondLevel) {
@@ -68,11 +73,11 @@ export async function main(ns) {
     }
 
     while (!secondLevel) {
-      await ns.sleep(10000)
       leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
       secondLevel = leastServerSize > INTERVAL_THRESHOLD
 
       logger.warn(`serverSize: ${leastServerSize}`)
+      await ns.sleep(10000)
     }
 
     const args = ["--doSetup", "--doHwgw", "--intervalTime", "1", "--doServer", "--maxPurchaseServerSize", "1048576"]
