@@ -40,3 +40,19 @@ export function formatMoney(number) {
     return number.toFixed(FRACTION_DIGITS).toString();
   }
 }
+
+export function formatCnt(number) {
+  if (number >= 1e15) {
+    return (number / 1e15).toFixed(FRACTION_DIGITS) + 'p';
+  } else if (number >= 1e12) {
+    return (number / 1e12).toFixed(FRACTION_DIGITS) + 't';
+  } else if (number >= 1e9) {
+    return (number / 1e9).toFixed(FRACTION_DIGITS) + 'g';
+  } else if (number >= 1e6) {
+    return (number / 1e6).toFixed(FRACTION_DIGITS) + 'm';
+  } else if (number >= 1e3) {
+    return (number / 1e3).toFixed(FRACTION_DIGITS) + 'k';
+  } else {
+    return number.toString();
+  }
+}

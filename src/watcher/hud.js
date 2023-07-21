@@ -1,15 +1,29 @@
 /** @param {NS} ns */
+
 /** @param {import("../hack").NS } ns */
 
+const container = document.querySelector('tbody.MuiTableBody-root.css-1xnox0e')
+
+/** @param {import(".").NS } ns */
 export async function main(ns) {
-  addVerticalSpace()
-  addHorizontalLine()
-  addTr('maxThread', 'Max Threads', '0')
-  addVerticalSpace()
-  addTr('maxThread', 'Max Threads', '1')
+  addData(ns)
+  const homeThread = document.querySelector('#home-thread')
+  const serverThread = document.querySelector('#server-thread')
+
+  while (true) {
+    await ns.sleep(10)
+  }
 }
 
-const container = document.querySelector('tbody.MuiTableBody-root.css-1xnox0e')
+function addData(ns) {
+  const data = document.querySelector('#home-thread')
+  if (data === null) {
+    addHorizontalLine()
+    addTr('home-thread', 'h-thr', '0')
+    addTr('server-thread', 's-thr', '0')
+    addHorizontalLine()
+  }
+}
 
 function addVerticalSpace() {
   const tempContainer = document.createElement('tr');
