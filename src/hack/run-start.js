@@ -73,7 +73,11 @@ export async function main(ns) {
     }
 
     while (!secondLevel) {
-      leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
+      if (ns.getPurchasedServers().length > 1) {
+        leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
+      } else {
+        leastServerSize = 1
+      }
       secondLevel = leastServerSize > INTERVAL_THRESHOLD
 
       logger.warn(`serverSize: ${leastServerSize}`)

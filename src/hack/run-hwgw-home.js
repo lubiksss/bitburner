@@ -7,7 +7,18 @@ import {availableHwgw} from "/src/utils/hwgw";
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   ns.disableLog('ALL')
+  const logger = new Logger(ns)
+
   const EXTRA_HOME_RAM = ns.args[0]
+  if (EXTRA_HOME_RAM === undefined) {
+    logger.error('Run script with EXTRA_HOME_RAM argument')
+    ns.exit()
+  }
+  const CPU_CORE = ns.args[1]
+  if (CPU_CORE === undefined) {
+    logger.error('Run script with CPU_CORE argument')
+    ns.exit()
+  }
 
   const ROOT_SRC = '/src/hack/basic'
 
@@ -17,9 +28,6 @@ export async function main(ns) {
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
   const SCRIPT_RAM = 1.75
-  const CPU_CORE = 5
-
-  const logger = new Logger(ns)
 
   const servers = scanAll(ns)
   while (true) {
