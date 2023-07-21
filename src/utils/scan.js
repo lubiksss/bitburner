@@ -127,7 +127,7 @@ export function getAvailableServers(ns, servers) {
   const rootedServers = getRootedServers(ns, servers)
 
   const myServers = ns.getPurchasedServers()
-  return rootedServers.concat(myServers).concat('home')
+  return myServers.concat(rootedServers).concat('home')
 }
 
 export function getAvailableServerThreads(ns, servers, targetScript, EXTRA_HOME_RAM) {

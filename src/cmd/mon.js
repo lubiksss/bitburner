@@ -13,7 +13,7 @@ export async function main(ns) {
     .map((script) => script.pid)[0]
 
   ns.resizeTail(290, 395, target)
-  ns.moveTail(1913, 5, target)
+  ns.moveTail(1650, 5, target)
 }
 
 export function autocomplete(data, args) {

@@ -6,7 +6,7 @@ export async function main(ns) {
   ns.disableLog('ALL')
   const logger = new Logger(ns)
 
-  let TARGET_SERVER_SIZE = 256
+  let TARGET_SERVER_SIZE = 32
   let MAX_TARGET_SERVER_SIZE = ns.args[0]
   if (MAX_TARGET_SERVER_SIZE === undefined) {
     MAX_TARGET_SERVER_SIZE = 8192

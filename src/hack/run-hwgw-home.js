@@ -7,7 +7,7 @@ import {availableHwgw} from "/src/utils/hwgw";
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   ns.disableLog('ALL')
-  const EXTRA_HOME_RAM = 1000
+  const EXTRA_HOME_RAM = ns.args[0]
 
   const ROOT_SRC = '/src/hack/basic'
 

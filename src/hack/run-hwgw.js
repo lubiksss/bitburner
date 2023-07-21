@@ -8,6 +8,10 @@ import {availableHwgw} from "/src/utils/hwgw";
 export async function main(ns) {
   ns.disableLog('ALL')
   const EXTRA_HOME_RAM = ns.args[0]
+  if (EXTRA_HOME_RAM === undefined) {
+    ns.tprint('Run script with EXTRA_HOME_RAM argument')
+    ns.exit()
+  }
 
   const ROOT_SRC = '/src/hack/basic'
 
@@ -20,10 +24,6 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
-  // don't use, because they are all 1.75(1.70)
-  const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/hack.js`)
-  const neededRamToGrow = ns.getScriptRam(`${ROOT_SRC}/grow.js`)
-  const neededRamToWeaken = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
 
   while (true) {
     // const hackableServers = getHackableServers(ns, servers)
