@@ -90,6 +90,7 @@ export async function main(ns) {
     ns.resizeTail(590, 195, target)
     ns.moveTail(1060, 0, target)
   }
+
   if (DO_Hwgw) {
     logger.info(`Start hwgw process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
@@ -102,6 +103,7 @@ export async function main(ns) {
     ns.resizeTail(590, 195, target)
     ns.moveTail(1060, 0, target)
   }
+
   if (DO_HwgwH) {
     logger.info(`Start hwgw home process`)
     ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)

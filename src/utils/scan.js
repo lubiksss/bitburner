@@ -141,6 +141,28 @@ export function getAvailableServerThreads(ns, servers, targetScript, EXTRA_HOME_
   ).reduce((a, b) => a + b, 0)
 }
 
+export function getMaxServerThreads(ns, servers, targetScript, EXTRA_HOME_RAM) {
+  return servers.map(
+    server => {
+      const serverRam = ns.getServerMaxRam(server)
+      const availableRam = server === "home" ? serverRam - EXTRA_HOME_RAM : serverRam
+      return floor(availableRam / targetScript)
+    }
+  ).reduce((a, b) => a + b, 0)
+}
+
+export function getProgramCnt(ns) {
+  const hasBruteSSH = ns.fileExists('/BruteSSH.exe')
+  const hasFTPCrack = ns.fileExists('/FTPCrack.exe')
+  const hasRelaySMTP = ns.fileExists('/relaySMTP.exe')
+  const hasHTTPWorm = ns.fileExists('/HTTPWorm.exe')
+  const hasSQLInject = ns.fileExists('/SQLInject.exe')
+
+  return [hasBruteSSH, hasFTPCrack, hasRelaySMTP, hasHTTPWorm, hasSQLInject]
+    .map((has) => (has ? 1 : 0))
+    .reduce((a, b) => a + b, 0)
+}
+
 /** @param {import("../hack").NS } ns */
 export function setUp(ns, servers, logger) {
   const hasBruteSSH = ns.fileExists('/BruteSSH.exe')
