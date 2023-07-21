@@ -29,7 +29,7 @@ export async function main(ns) {
   const ROOT_WATCHER_SRC = '/src/watcher'
   const WATCHER_TARGETS = ['n00dles']
 
-  const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
+  const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
 
   const logger = new Logger(ns)
 
@@ -52,7 +52,7 @@ export async function main(ns) {
       .map((script) => script.pid)[0]
 
     ns.resizeTail(290, 395, target)
-    ns.moveTail(1650, 5, target)
+    ns.moveTail(1650, 0, target)
   })
 
   if (DO_SETUP) {
@@ -70,7 +70,7 @@ export async function main(ns) {
       .map((script) => script.pid)[0]
 
     ns.resizeTail(590, 200, target)
-    ns.moveTail(1538, 445, target)
+    ns.moveTail(1060, 200, target)
   }
 
   if (DO_FARM_EXP) {
@@ -81,14 +81,37 @@ export async function main(ns) {
   if (DO_HACK) {
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, EXTRA_HOME_RAM)
+
+    ns.tail(`${ROOT_SRC}/run-hack.js`, "home", EXTRA_HOME_RAM)
+
+    const target = ns.ps('home')
+      .filter((script) => script.filename.includes("run-hack") && script.args.includes(EXTRA_HOME_RAM))
+      .map((script) => script.pid)[0]
+
+    ns.resizeTail(590, 195, target)
+    ns.moveTail(1060, 0, target)
   }
   if (DO_Hwgw) {
     logger.info(`Start hwgw process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
+
+    const target = ns.ps('home')
+      .filter((script) => script.filename.includes("run-hwgw") && script.args.includes(EXTRA_HOME_RAM))
+      .map((script) => script.pid)[0]
+
+    ns.resizeTail(590, 195, target)
+    ns.moveTail(1060, 0, target)
   }
   if (DO_HwgwH) {
     logger.info(`Start hwgw home process`)
     ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
+
+    const target = ns.ps('home')
+      .filter((script) => script.filename.includes("run-hwgw-home") && script.args.includes(EXTRA_HOME_RAM))
+      .map((script) => script.pid)[0]
+
+    ns.resizeTail(590, 195, target)
+    ns.moveTail(1060, 0, target)
   }
 }
 

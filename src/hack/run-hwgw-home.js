@@ -104,6 +104,7 @@ export async function main(ns) {
           hwgw = availableHwgw(hwgw, availableThreads)[1]
         }
       }
+      logger.warn(`${hwgw}: ${targetServer}`)
       await ns.sleep(5 * INTERVAL_TIME)
     }
   }

@@ -26,9 +26,13 @@ export function formatFloat(number) {
 }
 
 export function formatMoney(number) {
-  if (number >= 1e9) {
-    return (number / 1e9).toFixed(FRACTION_DIGITS) + 'g';
-  } else if (number >= 1e3) {
+  if (number >= 1e15) {
+    return (number / 1e15).toFixed(FRACTION_DIGITS) + 'q';
+  } else if (number >= 1e12) {
+    return (number / 1e12).toFixed(FRACTION_DIGITS) + 't';
+  } else if (number >= 1e9) {
+    return (number / 1e9).toFixed(FRACTION_DIGITS) + 'b';
+  } else if (number >= 1e6) {
     return (number / 1e6).toFixed(FRACTION_DIGITS) + 'm';
   } else if (number >= 1e3) {
     return (number / 1e3).toFixed(FRACTION_DIGITS) + 'k';
