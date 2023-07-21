@@ -8,6 +8,7 @@ export async function main(ns) {
     ['doSetup', false],
     ['doServer', false],
     ['doExp', false],
+    ['doShare', false],
     ['doHack', false],
     ['doHwgw', false],
     ['doHwgwH', false],
@@ -18,6 +19,7 @@ export async function main(ns) {
   const DO_SETUP = data.doSetup
   const DO_PURCHASE_SERVER = data.doServer
   const DO_FARM_EXP = data.doExp
+  const DO_SHARE = data.doShare
   const DO_HACK = data.doHack
   const DO_Hwgw = data.doHwgw
   const DO_HwgwH = data.doHwgwH
@@ -78,6 +80,11 @@ export async function main(ns) {
     ns.exec(`${ROOT_SRC}/run-exp.js`, "home", 1, EXTRA_HOME_RAM, TARGET_HACK_LEVEL)
   }
 
+  if (DO_SHARE) {
+    logger.info(`Start share process`)
+    ns.exec(`${ROOT_SRC}/run-share.js`, "home", 1, EXTRA_HOME_RAM)
+  }
+
   if (DO_HACK) {
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, EXTRA_HOME_RAM)
@@ -125,6 +132,7 @@ export function autocomplete(data, args) {
     "--doServer",
     "--doExp",
     "--doHack",
+    "--doShare",
     "--doHwgw",
     "--doHwgwH",
     "--extraHomeRamRatio",

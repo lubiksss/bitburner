@@ -1,11 +1,5 @@
 import {Logger} from "/src/utils/logger";
-import {
-  getAvailableServers,
-  getAvailableServerThreads,
-  getMaxServerThreads,
-  getProgramCnt,
-  scanAll
-} from "/src/utils/scan";
+import {getAvailableServers, getMaxServerThreads, getProgramCnt, scanAll} from "/src/utils/scan";
 
 /** @param {NS} ns */
 /** @param {import("./index").NS } ns */
@@ -25,7 +19,7 @@ export async function main(ns) {
     })
   }
 
-  if (ns.args > 0) {
+  if ((ns.args).length > 0) {
     ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...ns.args)
   } else {
     ns.tail(`${ROOT_SRC}/run-start.js`, "home")
@@ -43,9 +37,9 @@ export async function main(ns) {
     let portCnt = getProgramCnt(ns)
     let servers = scanAll(ns)
     let availableServers = getAvailableServers(ns, servers)
-    let availableThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
+    let maxThreads = getMaxServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
-    if (portCnt < PORT_THRESHOLD || availableThreads < THREAD_THRESHOLD) {
+    if (portCnt < PORT_THRESHOLD || maxThreads < THREAD_THRESHOLD) {
       const args = ["--doSetup", "--doHack"]
       ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
     }
@@ -53,17 +47,36 @@ export async function main(ns) {
     //TODO
     // buy all program
 
-    while (portCnt < PORT_THRESHOLD || availableThreads < THREAD_THRESHOLD) {
+    while (portCnt < PORT_THRESHOLD || maxThreads < THREAD_THRESHOLD) {
       await ns.sleep(10000)
       portCnt = getProgramCnt(ns)
       availableServers = getAvailableServers(ns, servers)
-      availableThreads = getMaxServerThreads(ns, availableServers, 1.75, EXTRA_HOME_RAM)
-      logger.warn(`pCnt: ${portCnt}, maxThr: ${availableThreads}`)
+      maxThreads = getMaxServerThreads(ns, availableServers, 1.75, EXTRA_HOME_RAM)
+      logger.warn(`pCnt: ${portCnt}, maxThr: ${maxThreads}`)
     }
 
     if (true) {
-      const args = ["--doSetup", "--doHwgw", "--doServer", "--maxPurchaseServerSize", "--1048576"]
+      const args = ["--doSetup", "--doHwgw", "--doServer", "--maxPurchaseServerSize", "1048576"]
       ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
     }
+
+    ns.closeTail(target)
   }
+}
+
+export function autocomplete(data, args) {
+  const serverSizes = [...Array(21).keys()].map((i) => Math.pow(2, i))
+  return [
+    "--doSetup",
+    "--doServer",
+    "--doExp",
+    "--doHack",
+    "--doShare",
+    "--doHwgw",
+    "--doHwgwH",
+    "--extraHomeRamRatio",
+    "--maxPurchaseServerSize",
+    "--targetHackLevel",
+    ...serverSizes
+  ]
 }
