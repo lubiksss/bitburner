@@ -15,6 +15,7 @@ export async function main(ns) {
     ['extraHomeRamRatio', 0.05],
     ['maxPurchaseServerSize', 1024],
     ['targetHackLevel', 100],
+    ['intervalTime', 100],
   ])
   const DO_SETUP = data.doSetup
   const DO_PURCHASE_SERVER = data.doServer
@@ -26,6 +27,7 @@ export async function main(ns) {
   const EXTRA_HOME_RAM_RATIO = data.extraHomeRamRatio
   const MAX_PURCHASE_SERVER_SIZE = data.maxPurchaseServerSize
   const TARGET_HACK_LEVEL = data.targetHackLevel
+  const INTERVAL_TIME = data.intervalTime
 
   const ROOT_SRC = '/src/hack'
   const ROOT_WATCHER_SRC = '/src/watcher'
@@ -100,8 +102,8 @@ export async function main(ns) {
 
   if (DO_Hwgw) {
     logger.info(`Start hwgw process`)
-    ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
-    ns.tail(`${ROOT_SRC}/run-hwgw.js`, "home", EXTRA_HOME_RAM)
+    ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM, INTERVAL_TIME)
+    ns.tail(`${ROOT_SRC}/run-hwgw.js`, "home", EXTRA_HOME_RAM, INTERVAL_TIME)
 
     const target = ns.ps('home')
       .filter((script) => script.filename.includes("run-hwgw") && script.args.includes(EXTRA_HOME_RAM))
@@ -138,6 +140,7 @@ export function autocomplete(data, args) {
     "--extraHomeRamRatio",
     "--maxPurchaseServerSize",
     "--targetHackLevel",
+    "--intervalTime",
     ...serverSizes
   ]
 }

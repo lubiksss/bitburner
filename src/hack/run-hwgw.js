@@ -7,21 +7,25 @@ import {availableHwgw} from "/src/utils/hwgw";
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   ns.disableLog('ALL')
+  const logger = new Logger(ns)
   const EXTRA_HOME_RAM = ns.args[0]
   if (EXTRA_HOME_RAM === undefined) {
-    ns.tprint('Run script with EXTRA_HOME_RAM argument')
+    logger.error('Run script with EXTRA_HOME_RAM argument')
+    ns.exit()
+  }
+  const INTERVAL_TIME = ns.args[1]
+  if (INTERVAL_TIME === undefined) {
+    logger.error('Run script with INTERVAL_TIME argument')
     ns.exit()
   }
 
   const ROOT_SRC = '/src/hack/basic'
 
-  const INTERVAL_TIME = 100
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
   const SCRIPT_RAM = 1.75
 
-  const logger = new Logger(ns)
 
   const servers = scanAll(ns)
 
