@@ -81,7 +81,6 @@ export async function main(ns) {
   if (DO_HACK) {
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, EXTRA_HOME_RAM)
-
     ns.tail(`${ROOT_SRC}/run-hack.js`, "home", EXTRA_HOME_RAM)
 
     const target = ns.ps('home')
@@ -94,6 +93,7 @@ export async function main(ns) {
   if (DO_Hwgw) {
     logger.info(`Start hwgw process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM)
+    ns.tail(`${ROOT_SRC}/run-hwgw.js`, "home", EXTRA_HOME_RAM)
 
     const target = ns.ps('home')
       .filter((script) => script.filename.includes("run-hwgw") && script.args.includes(EXTRA_HOME_RAM))
@@ -105,6 +105,7 @@ export async function main(ns) {
   if (DO_HwgwH) {
     logger.info(`Start hwgw home process`)
     ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
+    ns.tail(`${ROOT_SRC}/run-hwgw-home.js`, "home", EXTRA_HOME_RAM)
 
     const target = ns.ps('home')
       .filter((script) => script.filename.includes("run-hwgw-home") && script.args.includes(EXTRA_HOME_RAM))

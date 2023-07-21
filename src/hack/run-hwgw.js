@@ -15,7 +15,7 @@ export async function main(ns) {
 
   const ROOT_SRC = '/src/hack/basic'
 
-  const INTERVAL_TIME = 1
+  const INTERVAL_TIME = 100
   const GROW_SEC_MULTIPLIER = 0.004
   const WEAKEN_SEC_MULTIPLIER = 0.05
   const HACK_MONEY_MULTIPLIER = 0.9
@@ -63,6 +63,7 @@ export async function main(ns) {
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
       if (availableServerThreads >= neededThreads) {
+        logger.warn(`${hwgw}: ${neededThreads}/${availableServerThreads}`)
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break
@@ -104,7 +105,6 @@ export async function main(ns) {
           hwgw = availableHwgw(hwgw, availableThreads)[1]
         }
       }
-      logger.warn(`${hwgw}: ${targetServer}`)
       await ns.sleep(4 * INTERVAL_TIME)
     }
   }
