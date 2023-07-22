@@ -56,3 +56,15 @@ export function formatCnt(number) {
     return number.toFixed(FRACTION_DIGITS).toString();
   }
 }
+
+export function formatPercent(number) {
+  return (number * 100).toFixed(FRACTION_DIGITS) + '%';
+}
+
+export function formatMemory(gibibytes) {
+  const sizes = ['GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+  if (gibibytes === 0) return '0 GiB';
+  const i = parseInt(Math.floor(Math.log(gibibytes) / Math.log(1024)));
+  const formattedSize = (gibibytes / Math.pow(1024, i)).toFixed(2);
+  return `${formattedSize}${sizes[i]}`;
+}

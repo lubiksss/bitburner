@@ -1,7 +1,4 @@
 /** @param {NS} ns */
-
-/** @param {import("../hack").NS } ns */
-
 const container = document.querySelector('tbody.MuiTableBody-root.css-1xnox0e')
 
 /** @param {import(".").NS } ns */

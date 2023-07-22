@@ -2,7 +2,7 @@ import {Logger} from '/src/utils/logger'
 import {floor} from "/src/utils/formatter";
 
 /** @param {NS} ns */
-/** @param {import("../hack").NS } ns */
+/** @param {import(".").NS } ns */
 export async function main(ns) {
   const logger = new Logger(ns)
   const servers = scanAll(ns)

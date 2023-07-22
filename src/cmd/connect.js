@@ -1,7 +1,7 @@
 import {howToGetServer} from "/src/utils/scan"
 
 /** @param {NS} ns */
-/** @param {import("../hack").NS } ns */
+/** @param {import(".").NS } ns */
 export async function main(ns) {
   const startServer = "home"
   const targetServer = ns.args[0]

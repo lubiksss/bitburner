@@ -1,15 +1,15 @@
 /** @param {NS} ns */
-import {scanAll} from "/src/utils/scan";
 
-/** @param {import("../hack").NS } ns */
+import {formatMemory} from "/src/utils/formatter";
 
+
+/** @param {import(".").NS } ns */
 export async function main(ns) {
-  const servers = scanAll(ns)
+  const homeRam = ns.getServerMaxRam("home");
+  const homeRamUsed = ns.getServerUsedRam("home");
 
-  const maxServerNameLength = servers
-    .map((server) => server.length)
-    .reduce((a, b) => Math.max(a, b), 0)
+  ns.tprint(`${formatMemory(homeRamUsed)}/${formatMemory(homeRam)}`)
 
-  ns.tprint(maxServerNameLength)
+  ns.tprint(`${formatMemory(1024)}`)
 }
 

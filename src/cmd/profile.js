@@ -1,7 +1,7 @@
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-  const ROOT_SRC = "/src/watcher"
+  const ROOT_SRC = "/src/utils"
 
   let targetServer = ns.args[0]
 
