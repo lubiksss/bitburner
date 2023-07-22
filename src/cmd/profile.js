@@ -1,19 +1,14 @@
 /** @param {NS} ns */
+import {tail} from "/src/utils/tail";
+
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   const ROOT_SRC = "/src/utils"
 
   let targetServer = ns.args[0]
 
-  ns.exec(`${ROOT_SRC}/tailWatcher.js`, "home", 1, targetServer)
-  ns.tail(`${ROOT_SRC}/tailWatcher.js`, "home", targetServer)
-
-  const target = ns.ps('home')
-    .filter((script) => script.filename.includes("tailWatcher") && script.args.includes(targetServer))
-    .map((script) => script.pid)[0]
-
-  ns.resizeTail(290, 395, target)
-  ns.moveTail(1650, 5, target)
+  ns.exec(`${ROOT_SRC}/profile.js`, "home", 1, targetServer)
+  tail(ns, `${ROOT_SRC}/profile.js`, 290, 395, 1650, 5, targetServer)
 }
 
 export function autocomplete(data, args) {

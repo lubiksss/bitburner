@@ -21,7 +21,7 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   while (true) {
-    const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * 0.05)
+    const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * 0.05)
     const CPU_CORE = ns.getServer("home").cpuCores
     const hackableServers = getHackableServers(ns, servers)
     const availableServers = ["home"]

@@ -33,7 +33,7 @@ export async function main(ns) {
   const ROOT_WATCHER_SRC = '/src/watcher'
   const WATCHER_TARGETS = ['n00dles']
 
-  const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
+  const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
 
   const logger = new Logger(ns)
 

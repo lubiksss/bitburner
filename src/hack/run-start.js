@@ -34,7 +34,7 @@ export async function main(ns) {
     const INTERVAL_THRESHOLD = 1024
     const HWGW_HOME_THRESHOLD = 8192
 
-    const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * 0.05)
+    const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * 0.05)
     const SCRIPT_RAM = 1.75
 
     let servers = scanAll(ns)
