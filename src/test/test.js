@@ -1,13 +1,15 @@
 /** @param {NS} ns */
+import {scanAll} from "/src/utils/scan";
+
 /** @param {import("../hack").NS } ns */
 
 export async function main(ns) {
-  const foo = ns.getServer("home").cpuCores
-  while (true) {
-    const data = ns.readPort(1)
-    ns.clearPort(1)
-    ns.tprint(data)
-    await ns.sleep(1000)
-  }
+  const servers = scanAll(ns)
+
+  const maxServerNameLength = servers
+    .map((server) => server.length)
+    .reduce((a, b) => Math.max(a, b), 0)
+
+  ns.tprint(maxServerNameLength)
 }
 

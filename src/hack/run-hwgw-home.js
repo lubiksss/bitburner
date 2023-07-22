@@ -63,7 +63,7 @@ export async function main(ns) {
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
       if (availableServerThreads >= neededThreads) {
-        logger.warn(`${hwgw.toString().padEnd(20)}: ${neededThreads}/${availableServerThreads}, [${targetServer}]`)
+        logger.mon(`[${targetServer}] [${hwgw}] [${neededThreads}/${availableServerThreads}]`)
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break

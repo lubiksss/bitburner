@@ -32,6 +32,7 @@ export class Logger {
     const timestamp = getKoreanTime();
     const levelMessage = level.toUpperCase().padEnd(this.LEVEL_PAD_LENGTH, this.PAD_CHARACTER);
     const logMessage = `[${timestamp}] [${levelMessage}]: ${args.join(' ')}\n`;
+    const noLevelLogMessage = `[${timestamp}]: ${args.join(' ')}\n`;
 
     const coloredLevelMessage = `${color}${levelMessage}${this.COLOR_RESET}`;
     const coloredLogMessage = `[${timestamp}] [${coloredLevelMessage}]: ${args.join(' ')}\n`;
@@ -41,6 +42,8 @@ export class Logger {
       this.ns.tprint(coloredLogMessage);
     } else if (level === 'warn') {
       this.ns.print(logMessage);
+    } else if (level === 'mon') {
+      this.ns.print(noLevelLogMessage);
     }
 
     // if (this.combinedLogLevels.includes(level)) {
@@ -61,6 +64,10 @@ export class Logger {
 
   error(...args) {
     this.log('error', this.COLOR_RED, ...args);
+  }
+
+  mon(...args) {
+    this.log('mon', null, ...args);
   }
 }
 
