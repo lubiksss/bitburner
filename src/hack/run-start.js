@@ -34,7 +34,7 @@ export async function main(ns) {
     const INTERVAL_THRESHOLD = 1024
     const HWGW_HOME_THRESHOLD = 8192
 
-    const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * 0.1)
+    const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * 0.05)
     const SCRIPT_RAM = 1.75
 
     let servers = scanAll(ns)
@@ -68,7 +68,7 @@ export async function main(ns) {
     let secondLevel = leastServerSize > INTERVAL_THRESHOLD
 
     if (!secondLevel) {
-      const args = ["--doSetup", "--doHwgw", "--doServer", "--maxPurchaseServerSize", "1048576"]
+      const args = ["--doSetup", "--doHwgw", "--doServer", "--maxPurchaseServerSize"]
       ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
     }
 

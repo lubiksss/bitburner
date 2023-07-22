@@ -9,16 +9,6 @@ export async function main(ns) {
   ns.disableLog('ALL')
   const logger = new Logger(ns)
 
-  const EXTRA_HOME_RAM = ns.args[0]
-  if (EXTRA_HOME_RAM === undefined) {
-    logger.error('Run script with EXTRA_HOME_RAM argument')
-    ns.exit()
-  }
-  const CPU_CORE = ns.args[1]
-  if (CPU_CORE === undefined) {
-    logger.error('Run script with CPU_CORE argument')
-    ns.exit()
-  }
 
   const ROOT_SRC = '/src/hack/basic'
 
@@ -31,6 +21,8 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   while (true) {
+    const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * 0.05)
+    const CPU_CORE = ns.getServer("home").cpuCores
     const hackableServers = getHackableServers(ns, servers)
     const availableServers = ["home"]
 
@@ -71,7 +63,7 @@ export async function main(ns) {
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
       if (availableServerThreads >= neededThreads) {
-        logger.warn(`${hwgw}: ${neededThreads}/${availableServerThreads}, ${targetServer}`)
+        logger.warn(`${hwgw.toString().padEnd(20)}: ${neededThreads}/${availableServerThreads}, [${targetServer}]`)
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break

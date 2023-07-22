@@ -11,6 +11,7 @@ export async function main(ns) {
   const serverThread = document.querySelector('#server-thread')
 
   while (true) {
+
     await ns.sleep(10)
   }
 }
@@ -19,8 +20,8 @@ function addData(ns) {
   const data = document.querySelector('#home-thread')
   if (data === null) {
     addHorizontalLine()
-    addTr('home-thread', 'h-thr', '0')
-    addTr('server-thread', 's-thr', '0')
+    addTr('home-thread', 'hUsg', '0')
+    addTr('server-thread', 'sUsg', '0')
     addHorizontalLine()
   }
 }

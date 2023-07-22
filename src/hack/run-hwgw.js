@@ -68,6 +68,7 @@ export async function main(ns) {
 
       if (availableServerThreads >= neededThreads) {
         logger.warn(`${hwgw}: ${neededThreads}/${availableServerThreads}`)
+
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break

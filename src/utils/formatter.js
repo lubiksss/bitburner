@@ -53,6 +53,6 @@ export function formatCnt(number) {
   } else if (number >= 1e3) {
     return (number / 1e3).toFixed(FRACTION_DIGITS) + 'k';
   } else {
-    return number.toString();
+    return number.toFixed(FRACTION_DIGITS).toString();
   }
 }

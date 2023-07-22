@@ -5,7 +5,7 @@ import {Logger} from "src/utils/logger";
 
 export async function main(ns) {
   const data = ns.flags([
-    ['doSetup', false],
+    ['doSetup', true],
     ['doServer', false],
     ['doExp', false],
     ['doShare', false],
@@ -13,7 +13,7 @@ export async function main(ns) {
     ['doHwgw', false],
     ['doHwgwH', false],
     ['extraHomeRamRatio', 0.05],
-    ['maxPurchaseServerSize', 1024],
+    ['maxPurchaseServerSize', 1048576],
     ['targetHackLevel', 100],
     ['intervalTime', 100],
   ])
@@ -33,7 +33,7 @@ export async function main(ns) {
   const ROOT_WATCHER_SRC = '/src/watcher'
   const WATCHER_TARGETS = ['n00dles']
 
-  const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
+  const EXTRA_HOME_RAM = Math.max(5, ns.getServerMaxRam('home') * EXTRA_HOME_RAM_RATIO)
 
   const logger = new Logger(ns)
 

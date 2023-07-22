@@ -9,7 +9,7 @@ export async function main(ns) {
   let TARGET_SERVER_SIZE = 32
   let MAX_TARGET_SERVER_SIZE = ns.args[0]
   if (MAX_TARGET_SERVER_SIZE === undefined) {
-    MAX_TARGET_SERVER_SIZE = 8192
+    MAX_TARGET_SERVER_SIZE = 1048576
   }
 
   while (true) {
