@@ -1,13 +1,12 @@
 import {Logger} from "/src/utils/logger";
-import {scanAll} from "/src/utils/scan";
+import {getAvailableServers, scanAll} from "/src/utils/scan";
 import {formatTime} from "/src/utils/formatter";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
   ns.disableLog('ALL')
-  const EXTRA_HOME_RAM = ns.args[0]
-  const TARGET_HACK_LEVEL = ns.args[1]
+  const TARGET_HACK_LEVEL = ns.args[0]
   ns.tprint(`Target hack level: ${TARGET_HACK_LEVEL}`)
   const ROOT_SRC = '/src/hack/basic'
   const EXP_FARM = 'joesguns'
@@ -19,30 +18,36 @@ export async function main(ns) {
   let myHackingLevel = ns.getHackingLevel()
   const weakenTime = ns.getWeakenTime(EXP_FARM)
 
-  await ns.sleep(10000)
+  const eachServerRamUsageQue = Array(100).fill(Array(10).fill(1))
+  const availableServers = getAvailableServers(ns, servers)
+    .filter(s => !s.includes('home'))
+    .filter(s => ns.getServerMaxRam(s) > 0)
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
     myHackingLevel = ns.getHackingLevel()
 
-    const rootedServers = servers.filter((server) => ns.hasRootAccess(server))
+    for (let i = 0; i < availableServers.length; i++) {
 
-    const myServers = ns.getPurchasedServers()
-    const availableServers = rootedServers.concat(myServers).concat('home')
-      .filter((server) => {
-        return ns.getServerUsedRam(server) === 0
-      })
-
-    for (const availableServer of availableServers) {
+      const availableServer = availableServers[i]
       const serverRam = ns.getServerMaxRam(availableServer)
       const usedRam = ns.getServerUsedRam(availableServer)
-      const availableRam = availableServer === "home" ? serverRam - usedRam - EXTRA_HOME_RAM : serverRam - usedRam
-      const threadCnt = Math.floor(availableRam / neededRamToExp)
-      if (availableRam >= neededRamToExp) {
-        const result = ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
-        logger.mon(`[${EXP_FARM}] [${threadCnt}t] [${formatTime(weakenTime)}s]`)
+      const ramUsage = usedRam / serverRam
+
+      eachServerRamUsageQue[i].shift()
+      eachServerRamUsageQue[i].push(ramUsage)
+
+      const avgServerRamUsage = eachServerRamUsageQue[i].reduce((a, b) => a + b, 0) / eachServerRamUsageQue[i].length
+
+      if (avgServerRamUsage === 0) {
+        const availableRam = serverRam - usedRam
+        const threadCnt = Math.floor(availableRam / neededRamToExp)
+        if (availableRam >= neededRamToExp) {
+          const result = ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
+          logger.mon(`[${availableServer}] [${threadCnt}t] [${formatTime(weakenTime)}s]`)
+        }
       }
+      await ns.sleep(300)
     }
-    await ns.sleep(100)
   }
   logger.info(`End exp process`)
 }

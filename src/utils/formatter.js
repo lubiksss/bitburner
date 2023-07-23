@@ -82,7 +82,7 @@ export function isPossibleThreadCnt(needed, available) {
   if (needed > available) {
     return COLOR_YELLOW + `${needed}t/${available}t` + COLOR_RESET;
   } else {
-    return COLOR_GREEN + `${needed}t/${available}t` + COLOR_RESET;
+    return COLOR_MAGENTA + `${needed}t/${available}t` + COLOR_RESET;
   }
 }
 

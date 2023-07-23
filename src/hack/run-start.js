@@ -85,7 +85,7 @@ export async function main(ns) {
       }
       if (lvl4 && levelFlag[4] === 0) {
         levelFlag[4] = 1
-        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH"]
+        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH", "--doExp"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
         homeRamUsageQue = Array(10).fill(1)
         serverRamUsageQue = Array(10).fill(1)
