@@ -61,10 +61,10 @@ export async function main(ns) {
 
       const pgmCnt = getProgramCnt(ns)
 
-      const lvl1 = pgmCnt < 4
-      const lvl2 = pgmCnt >= 4
-      const lvl3 = pgmCnt >= 4 && avgServerRamUsage <= 0.3 && levelFlag[2] === 1
-      const lvl4 = pgmCnt >= 4 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
+      const lvl1 = pgmCnt < 3
+      const lvl2 = pgmCnt >= 3
+      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.5 && levelFlag[2] === 1
+      const lvl4 = pgmCnt >= 3 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
 
       if (lvl1 && levelFlag[1] === 0) {
         levelFlag[1] = 1
