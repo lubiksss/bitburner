@@ -1,4 +1,5 @@
-import {Logger} from "src/utils/logger";
+import {Logger} from "/src/utils/logger";
+import {tail} from "/src/utils/tail";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
@@ -46,35 +47,9 @@ export async function main(ns) {
   })
 
 
-  logger.info(`Start watcher`)
-  WATCHER_TARGETS.forEach((WATCHER_TARGET) => {
-    ns.run(`${ROOT_WATCHER_SRC}/tailWatcher.js`, 1, WATCHER_TARGET)
-    ns.tail(`${ROOT_WATCHER_SRC}/tailWatcher.js`, "home", WATCHER_TARGET)
-
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("tailWatcher") && script.args.includes(WATCHER_TARGET))
-      .map((script) => script.pid)[0]
-
-    ns.resizeTail(290, 395, target)
-    ns.moveTail(1650, 0, target)
-  })
-
   if (DO_SETUP) {
     logger.info(`Start setup process`)
     ns.exec(`${ROOT_SRC}/run-setup.js`, "home", 1)
-  }
-
-  if (DO_PURCHASE_SERVER) {
-    logger.info(`Start server purchase process`)
-    ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
-    ns.tail(`${ROOT_SRC}/run-server.js`, "home", MAX_PURCHASE_SERVER_SIZE)
-
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("run-server") && script.args.includes(MAX_PURCHASE_SERVER_SIZE))
-      .map((script) => script.pid)[0]
-
-    ns.resizeTail(590, 200, target)
-    ns.moveTail(1060, 200, target)
   }
 
   if (DO_FARM_EXP) {
@@ -90,40 +65,25 @@ export async function main(ns) {
   if (DO_HACK) {
     logger.info(`Start hack process`)
     ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, EXTRA_HOME_RAM)
-    ns.tail(`${ROOT_SRC}/run-hack.js`, "home", EXTRA_HOME_RAM)
-
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("run-hack") && script.args.includes(EXTRA_HOME_RAM))
-      .map((script) => script.pid)[0]
-
-    ns.resizeTail(590, 195, target)
-    ns.moveTail(1060, 0, target)
+    tail(ns, `${ROOT_SRC}/run-hack.js`, 683, 5, 1450, 438 + 130, EXTRA_HOME_RAM)
   }
 
   if (DO_Hwgw) {
     logger.info(`Start hwgw process`)
     ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM, INTERVAL_TIME)
-    ns.tail(`${ROOT_SRC}/run-hwgw.js`, "home", EXTRA_HOME_RAM, INTERVAL_TIME)
+    tail(ns, `${ROOT_SRC}/run-hwgw.js`, 683, 5, 1450, 438 + 130, EXTRA_HOME_RAM, INTERVAL_TIME)
+  }
 
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("run-hwgw") && script.args.includes(EXTRA_HOME_RAM))
-      .map((script) => script.pid)[0]
-
-    ns.resizeTail(590, 195, target)
-    ns.moveTail(1060, 0, target)
+  if (DO_PURCHASE_SERVER) {
+    logger.info(`Start server purchase process`)
+    ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
+    // tail(ns, `${ROOT_SRC}/run-server.js`, 683, 3, 1450, 438 + 130 + 150, MAX_PURCHASE_SERVER_SIZE)
   }
 
   if (DO_HwgwH) {
     logger.info(`Start hwgw home process`)
     ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
-    ns.tail(`${ROOT_SRC}/run-hwgw-home.js`, "home", EXTRA_HOME_RAM)
-
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("run-hwgw-home") && script.args.includes(EXTRA_HOME_RAM))
-      .map((script) => script.pid)[0]
-
-    ns.resizeTail(590, 195, target)
-    ns.moveTail(1060, 0, target)
+    tail(ns, `${ROOT_SRC}/run-hwgw-home.js`, 683, 5, 1450, 438 + 130 + 150, EXTRA_HOME_RAM)
   }
 }
 

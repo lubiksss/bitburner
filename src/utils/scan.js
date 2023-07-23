@@ -203,3 +203,14 @@ export function setUp(ns, servers, logger) {
     }
   }
 }
+
+export function isAlreadyRunning(ns, fileName, args) {
+  const targets = ns.ps('home')
+    .filter((script) => {
+      const hasName = script.filename.includes("start")
+      const hasArgs = args.every((arg) => script.args.includes(arg))
+      return hasName && hasArgs
+    })
+  ns.tprint(targets)
+  return targets.length > 0
+}

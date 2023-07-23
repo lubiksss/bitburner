@@ -3,7 +3,10 @@
 export async function main(ns) {
 }
 
-export function tail(ns, scriptName, width, height, x, y, ...args) {
+const lineHeight = [0, 1, 2, 105, 130, 150]
+
+export function tail(ns, scriptName, width, lineCnt, x, y, ...args) {
+  const height = lineHeight[lineCnt]
   ns.tail(scriptName, 'home', ...args)
   const fileName = scriptName.split('/').pop()
   const target = ns.ps('home')

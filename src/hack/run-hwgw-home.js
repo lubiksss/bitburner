@@ -1,6 +1,6 @@
 import {Logger} from "/src/utils/logger";
 import {getAvailableServerThreads, getHackableServers, scanAll} from "/src/utils/scan";
-import {ceil, floor} from "/src/utils/formatter";
+import {ceil, floor, formatTime} from "/src/utils/formatter";
 import {availableHwgw} from "/src/utils/hwgw";
 
 /** @param {NS} ns */
@@ -21,7 +21,7 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   while (true) {
-    const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * 0.05)
+    const EXTRA_HOME_RAM = ns.args[0]
     const CPU_CORE = ns.getServer("home").cpuCores
     const hackableServers = getHackableServers(ns, servers)
     const availableServers = ["home"]
@@ -63,7 +63,7 @@ export async function main(ns) {
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
 
       if (availableServerThreads >= neededThreads) {
-        logger.mon(`[${targetServer}] [${hwgw}] [${neededThreads}/${availableServerThreads}]`)
+        logger.mon(`[${targetServer}] [${neededThreads}t/${availableServerThreads}t] [${formatTime(weakenTime)}s]`)
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break

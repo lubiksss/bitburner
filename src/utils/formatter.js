@@ -37,7 +37,7 @@ export function formatMoney(number) {
   } else if (number >= 1e3) {
     return (number / 1e3).toFixed(FRACTION_DIGITS) + 'k';
   } else {
-    return number.toFixed(FRACTION_DIGITS).toString();
+    return number.toFixed(FRACTION_DIGITS);
   }
 }
 
@@ -53,7 +53,7 @@ export function formatCnt(number) {
   } else if (number >= 1e3) {
     return (number / 1e3).toFixed(FRACTION_DIGITS) + 'k';
   } else {
-    return number.toFixed(FRACTION_DIGITS).toString();
+    return number.toFixed(FRACTION_DIGITS).toString()
   }
 }
 
@@ -66,5 +66,5 @@ export function formatMemory(gibibytes) {
   if (gibibytes === 0) return '0 GiB';
   const i = parseInt(Math.floor(Math.log(gibibytes) / Math.log(1024)));
   const formattedSize = (gibibytes / Math.pow(1024, i)).toFixed(2);
-  return `${formattedSize}${sizes[i]}`;
+  return `${formattedSize.padStart(6)}${sizes[i]}`;
 }

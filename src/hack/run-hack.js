@@ -1,6 +1,6 @@
 import {Logger} from "/src/utils/logger";
 import {getAvailableServers, getHackableServers, scanAll} from "/src/utils/scan";
-import {formatMoney} from "src/utils/formatter";
+import {formatTime} from "/src/utils/formatter";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
@@ -12,11 +12,9 @@ export async function main(ns) {
   const logger = new Logger(ns)
 
   const servers = scanAll(ns)
-  const neededRamToHack = ns.getScriptRam(`${ROOT_SRC}/hack.js`)
+  const neededRamToHack = 1.75
 
   let isThereMoneyToHack = true
-  let serverMaxMoney = 1
-  let serverAvailableMoney = 0
 
   while (isThereMoneyToHack) {
     const hackableServers = getHackableServers(ns, servers)
@@ -33,6 +31,8 @@ export async function main(ns) {
 
         if (availableRam >= neededRamToHack && isAvailable) {
           const result = ns.exec(`${ROOT_SRC}/hack.js`, availableServer, availableThreads, targetServer)
+          const hackTime = ns.getHackTime(targetServer)
+          logger.mon(`[${targetServer}] [${availableThreads}t] [${formatTime(hackTime)}s]`)
           if (result === 0) {
             continue
           }
@@ -46,14 +46,6 @@ export async function main(ns) {
     isThereMoneyToHack = hackableServers
       .map(server => ns.getServerMaxMoney(server) * HACK_RATIO < ns.getServerMoneyAvailable(server))
       .some(is => is)
-    serverMaxMoney = hackableServers
-      .map(server => ns.getServerMaxMoney(server))
-      .reduce((a, b) => a + b, 0)
-    serverAvailableMoney = hackableServers
-      .map(server => ns.getServerMoneyAvailable(server))
-      .reduce((a, b) => a + b, 0)
-
-    logger.warn(`${isThereMoneyToHack}: ${formatMoney(serverAvailableMoney)}/${formatMoney(serverMaxMoney)}`)
 
     await ns.sleep(1000)
   }

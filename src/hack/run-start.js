@@ -1,5 +1,7 @@
 import {Logger} from "/src/utils/logger";
-import {getAvailableServers, getMaxServerThreads, scanAll} from "/src/utils/scan";
+import {tail} from "/src/utils/tail";
+import {getAvailableServers, getProgramCnt, scanAll} from "/src/utils/scan";
+import {formatMemory, formatMoney, formatPercent} from "/src/utils/formatter";
 
 /** @param {NS} ns */
 /** @param {import("./index").NS } ns */
@@ -19,77 +21,82 @@ export async function main(ns) {
     })
   }
 
+  const servers = scanAll(ns)
+
   if ((ns.args).length > 0) {
     ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...ns.args)
   } else {
-    ns.tail(`${ROOT_SRC}/run-start.js`, "home")
-    const target = ns.ps('home')
-      .filter((script) => script.filename.includes("run-start"))
-      .map((script) => script.pid)[0]
-    ns.resizeTail(590, 195, target)
-    ns.moveTail(470, 0, target)
+    tail(ns, `${ROOT_SRC}/run-start.js`, 683, 4, 1450, 438)
 
-    const PORT_THRESHOLD = 3
-    const THREAD_THRESHOLD = 400
-    const INTERVAL_THRESHOLD = 1024
-    const HWGW_HOME_THRESHOLD = 8192
+    let levelFlag = Array(5).fill(0)
+    let homeRamUsageQue = Array(10).fill(1)
+    let serverRamUsageQue = Array(10).fill(1)
 
-    const EXTRA_HOME_RAM = Math.max(10, ns.getServerMaxRam('home') * 0.05)
-    const SCRIPT_RAM = 1.75
+    while (true) {
+      const availableServers = getAvailableServers(ns, servers)
+      const availableServersExceptHome = availableServers.filter((server) => server !== 'home')
 
-    let servers = scanAll(ns)
-    let availableServers = getAvailableServers(ns, servers)
-    let maxThreads = getMaxServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
+      const homeMaxRam = ns.getServerMaxRam('home')
+      const homeUsedRam = ns.getServerUsedRam('home')
+      const homeRamUsage = homeUsedRam / homeMaxRam
+      homeRamUsageQue.shift()
+      homeRamUsageQue.push(homeRamUsage)
+      const avgHomeRamUsage = homeRamUsageQue.reduce((a, b) => a + b, 0) / homeRamUsageQue.length
 
-    let firstLevel = maxThreads > THREAD_THRESHOLD
-    if (!firstLevel) {
-      const args = ["--doSetup", "--doHack"]
-      ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
-    }
+      const serverMaxRam = availableServersExceptHome.map((server) => ns.getServerMaxRam(server)).reduce((a, b) => a + b, 0)
+      const serverUsedRam = availableServersExceptHome.map((server) => ns.getServerUsedRam(server)).reduce((a, b) => a + b, 0)
+      const serverRamUsage = serverUsedRam / serverMaxRam
+      serverRamUsageQue.shift()
+      serverRamUsageQue.push(serverRamUsage)
+      const avgServerRamUsage = serverRamUsageQue.reduce((a, b) => a + b, 0) / serverRamUsageQue.length
 
-    //TODO
-    // buy all program
+      const serverMaxMoney = availableServersExceptHome.map((server) => ns.getServerMaxMoney(server)).reduce((a, b) => a + b, 0)
+      const sererCurrentMoney = availableServersExceptHome.map((server) => ns.getServerMoneyAvailable(server)).reduce((a, b) => a + b, 0)
 
-    while (!firstLevel) {
-      availableServers = getAvailableServers(ns, servers)
-      maxThreads = getMaxServerThreads(ns, availableServers, 1.75, EXTRA_HOME_RAM)
-      firstLevel = maxThreads > THREAD_THRESHOLD
+      const purchasedServers = ns.getPurchasedServers()
+      const purchasedServersIndex = purchasedServers.findIndex(
+        (server, index) => index !== 0 && server.split('-').pop() !== purchasedServers[index - 1].split('-').pop()
+      )
+      const purChasedLastServer = purchasedServersIndex === -1 ? purchasedServers.pop() : purchasedServers[purchasedServersIndex - 1]
 
-      logger.warn(`maxThr: ${maxThreads}`)
-      await ns.sleep(10000)
-    }
+      const pgmCnt = getProgramCnt(ns)
 
-    let leastServerSize
-    if (ns.getPurchasedServers().length > 1) {
-      leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
-    } else {
-      leastServerSize = 1
-    }
-    let secondLevel = leastServerSize > INTERVAL_THRESHOLD
+      const lvl1 = pgmCnt < 4
+      const lvl2 = pgmCnt >= 4
+      const lvl3 = pgmCnt >= 4 && avgServerRamUsage <= 0.3 && levelFlag[2] === 1
+      const lvl4 = pgmCnt >= 4 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
 
-    if (!secondLevel) {
-      const args = ["--doSetup", "--doHwgw", "--doServer", "--maxPurchaseServerSize"]
-      ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
-    }
-
-    while (!secondLevel) {
-      if (ns.getPurchasedServers().length > 1) {
-        leastServerSize = ns.getPurchasedServers().reverse().shift().split('-')[2]
-      } else {
-        leastServerSize = 1
+      if (lvl1 && levelFlag[1] === 0) {
+        levelFlag[1] = 1
+        const args = ["--doHack"]
+        ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
       }
-      secondLevel = leastServerSize > INTERVAL_THRESHOLD
+      if (lvl2 && levelFlag[2] === 0) {
+        levelFlag[2] = 1
+        const args = ["--doHwgw", "--doServer"]
+        ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
+      }
+      if (lvl3 && levelFlag[3] === 0) {
+        levelFlag[3] = 1
+        const args = ["--doHwgw", "--doServer", "--intervalTime", 1]
+        ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
+      }
+      if (lvl4 && levelFlag[4] === 0) {
+        levelFlag[4] = 1
+        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH"]
+        ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
+      }
 
-      logger.warn(`serverSize: ${leastServerSize}`)
-      await ns.sleep(10000)
+      ns.print(`[Home  ] ${formatMemory(homeUsedRam)}/${formatMemory(homeMaxRam)} | ${ns.getServer('home').cpuCores}Core | ${pgmCnt}Pgm`)
+      ns.print(`[Server] ${formatMemory(serverUsedRam)}/${formatMemory(serverMaxRam)} | ${formatMoney(sererCurrentMoney)}/${formatMoney(serverMaxMoney)}`)
+      ns.print(`[HomeRamUsg] ${formatPercent(avgHomeRamUsage)} | [ServerRamUsg] ${formatPercent(avgServerRamUsage)}`)
+      ns.print(`[Purchased] ${purChasedLastServer} | [Level]: ${levelFlag.slice(1,)}`)
+
+      await ns.sleep(1000)
     }
-
-    const args = ["--doSetup", "--doHwgw", "--intervalTime", "1", "--doServer", "--maxPurchaseServerSize", "1048576"]
-    ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
-
-    ns.closeTail(target)
   }
 }
+
 
 export function autocomplete(data, args) {
   const serverSizes = [...Array(21).keys()].map((i) => Math.pow(2, i))
