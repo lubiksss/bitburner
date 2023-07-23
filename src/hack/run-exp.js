@@ -49,8 +49,8 @@ export async function main(ns) {
           logger.mon(`[${availableServer}] [${threadCnt}t] [share]`)
         }
       }
-      await ns.sleep(300)
     }
+    await ns.sleep(300)
   }
   logger.info(`End exp process`)
 }

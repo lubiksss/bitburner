@@ -15,7 +15,7 @@ export async function main(ns) {
     ['doHwgwH', false],
     ['extraHomeRamRatio', 0.05],
     ['maxPurchaseServerSize', 1048576],
-    ['targetHackLevel', 100],
+    ['targetHackLevel', 5000],
     ['intervalTime', 100],
   ])
   const DO_SETUP = data.doSetup
@@ -82,8 +82,8 @@ export async function main(ns) {
 
   if (DO_FARM_EXP) {
     logger.info(`Start exp process`)
-    ns.exec(`${ROOT_SRC}/run-exp.js`, "home", 1, 3000)
-    tail(ns, `${ROOT_SRC}/run-exp.js`, 683, 3, 1450, 438 + 130 + 150 + 300, 3000)
+    ns.exec(`${ROOT_SRC}/run-exp.js`, "home", 1, TARGET_HACK_LEVEL)
+    tail(ns, `${ROOT_SRC}/run-exp.js`, 683, 3, 1450, 438 + 130 + 150 + 300, TARGET_HACK_LEVEL)
   }
 }
 
