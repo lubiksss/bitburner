@@ -1,6 +1,6 @@
 import {Logger} from "/src/utils/logger";
 import {getAvailableServerThreads, getHackableServers, scanAll} from "/src/utils/scan";
-import {ceil, floor, formatTime} from "/src/utils/formatter";
+import {ceil, floor, formatTime, isPossibleThreadCnt} from "/src/utils/formatter";
 import {availableHwgw} from "/src/utils/hwgw";
 
 /** @param {NS} ns */
@@ -61,9 +61,9 @@ export async function main(ns) {
 
       const neededThreads = hwgw.reduce((a, b) => a + b, 0)
       const availableServerThreads = getAvailableServerThreads(ns, availableServers, SCRIPT_RAM, EXTRA_HOME_RAM)
+      logger.mon(`[${targetServer}] [${isPossibleThreadCnt(neededThreads, availableServerThreads)}] [${formatTime(weakenTime)}s]`)
 
       if (availableServerThreads >= neededThreads) {
-        logger.mon(`[${targetServer}] [${neededThreads}t/${availableServerThreads}t] [${formatTime(weakenTime)}s]`)
         for (const availableServer of availableServers) {
           if (hwgw.reduce((a, b) => a + b, 0) === 0) {
             break

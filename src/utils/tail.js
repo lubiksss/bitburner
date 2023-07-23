@@ -3,7 +3,9 @@
 export async function main(ns) {
 }
 
-const lineHeight = [0, 1, 2, 105, 130, 150]
+const lineHeight = [0,
+  1, 2, 105, 130, 150,
+  0, 0, 0, 0, 300]
 
 export function tail(ns, scriptName, width, lineCnt, x, y, ...args) {
   const height = lineHeight[lineCnt]

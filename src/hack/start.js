@@ -83,7 +83,7 @@ export async function main(ns) {
   if (DO_HwgwH) {
     logger.info(`Start hwgw home process`)
     ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
-    tail(ns, `${ROOT_SRC}/run-hwgw-home.js`, 683, 5, 1450, 438 + 130 + 150, EXTRA_HOME_RAM)
+    tail(ns, `${ROOT_SRC}/run-hwgw-home.js`, 683, 10, 1450, 438 + 130 + 150, EXTRA_HOME_RAM)
   }
 }
 

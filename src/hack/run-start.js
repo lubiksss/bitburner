@@ -63,7 +63,7 @@ export async function main(ns) {
 
       const lvl1 = pgmCnt < 3
       const lvl2 = pgmCnt >= 3
-      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.5 && levelFlag[2] === 1
+      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.3 && levelFlag[2] === 1
       const lvl4 = pgmCnt >= 3 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
 
       if (lvl1 && levelFlag[1] === 0) {
@@ -80,11 +80,15 @@ export async function main(ns) {
         levelFlag[3] = 1
         const args = ["--doHwgw", "--doServer", "--intervalTime", 1]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
+        homeRamUsageQue = Array(10).fill(1)
+        serverRamUsageQue = Array(10).fill(1)
       }
       if (lvl4 && levelFlag[4] === 0) {
         levelFlag[4] = 1
         const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
+        homeRamUsageQue = Array(10).fill(1)
+        serverRamUsageQue = Array(10).fill(1)
       }
 
       ns.print(`[Home  ] ${formatMemory(homeUsedRam)}/${formatMemory(homeMaxRam)} | ${ns.getServer('home').cpuCores}Core | ${pgmCnt}Pgm`)

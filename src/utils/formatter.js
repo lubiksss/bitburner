@@ -4,6 +4,12 @@ export async function main(ns) {
 }
 
 const FRACTION_DIGITS = 3;
+const COLOR_RED = '\x1b[31m';
+const COLOR_GREEN = '\x1b[32m';
+const COLOR_YELLOW = '\x1b[33m';
+const COLOR_BLUE = '\x1b[34m';
+const COLOR_MAGENTA = '\x1b[35m';
+const COLOR_RESET = '\x1b[0m';
 
 export function formatTime(number) {
   return (number / 1000).toFixed(FRACTION_DIGITS);
@@ -58,14 +64,7 @@ export function formatCnt(number) {
 }
 
 export function formatPercent(number) {
-  const COLOR_RED = '\x1b[31m';
-  const COLOR_GREEN = '\x1b[32m';
-  const COLOR_YELLOW = '\x1b[33m';
-  const COLOR_BLUE = '\x1b[34m';
-  const COLOR_MAGENTA = '\x1b[35m';
-  const COLOR_RESET = '\x1b[0m';
   const percentString = (number * 100).toFixed(FRACTION_DIGITS) + '%';
-
   if (number > 0.9) {
     return COLOR_RED + percentString + COLOR_RESET;
   } else if (number > 0.75) {
@@ -76,6 +75,14 @@ export function formatPercent(number) {
     return COLOR_BLUE + percentString + COLOR_RESET;
   } else {
     return COLOR_GREEN + percentString + COLOR_RESET;
+  }
+}
+
+export function isPossibleThreadCnt(needed, available) {
+  if (needed > available) {
+    return COLOR_YELLOW + `${needed}t/${available}t` + COLOR_RESET;
+  } else {
+    return COLOR_GREEN + `${needed}t/${available}t` + COLOR_RESET;
   }
 }
 

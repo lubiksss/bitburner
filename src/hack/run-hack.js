@@ -14,9 +14,7 @@ export async function main(ns) {
   const servers = scanAll(ns)
   const neededRamToHack = 1.75
 
-  let isThereMoneyToHack = true
-
-  while (isThereMoneyToHack) {
+  while (true) {
     const hackableServers = getHackableServers(ns, servers)
     const availableServers = getAvailableServers(ns, servers)
 
@@ -43,11 +41,6 @@ export async function main(ns) {
         }
       }
     }
-    isThereMoneyToHack = hackableServers
-      .map(server => ns.getServerMaxMoney(server) * HACK_RATIO < ns.getServerMoneyAvailable(server))
-      .some(is => is)
-
     await ns.sleep(1000)
   }
-  logger.info(`End hack process`)
 }
