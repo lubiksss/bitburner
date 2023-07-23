@@ -15,15 +15,16 @@ export async function main(ns) {
 
   const servers = scanAll(ns)
   const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
+  const neededRamToShare = ns.getScriptRam(`${ROOT_SRC}/share.js`)
   let myHackingLevel = ns.getHackingLevel()
   const weakenTime = ns.getWeakenTime(EXP_FARM)
 
   const eachServerRamUsageQue = Array(100).fill(Array(10).fill(1))
-  const availableServers = getAvailableServers(ns, servers)
-    .filter(s => !s.includes('home'))
-    .filter(s => ns.getServerMaxRam(s) > 0)
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
+    const availableServers = getAvailableServers(ns, servers)
+      .filter(s => !s.includes('home'))
+      .filter(s => ns.getServerMaxRam(s) > 0)
     myHackingLevel = ns.getHackingLevel()
 
     for (let i = 0; i < availableServers.length; i++) {
@@ -40,10 +41,12 @@ export async function main(ns) {
 
       if (avgServerRamUsage === 0) {
         const availableRam = serverRam - usedRam
-        const threadCnt = Math.floor(availableRam / neededRamToExp)
-        if (availableRam >= neededRamToExp) {
-          const result = ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
+        const threadCnt = Math.floor(availableRam / (neededRamToExp + neededRamToShare))
+        if (availableRam >= (neededRamToExp + neededRamToShare)) {
+          ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
           logger.mon(`[${availableServer}] [${threadCnt}t] [${formatTime(weakenTime)}s]`)
+          ns.exec(`${ROOT_SRC}/share.js`, availableServer, threadCnt)
+          logger.mon(`[${availableServer}] [${threadCnt}t] [share]`)
         }
       }
       await ns.sleep(300)
