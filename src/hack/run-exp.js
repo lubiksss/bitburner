@@ -1,9 +1,11 @@
 import {Logger} from "/src/utils/logger";
 import {scanAll} from "/src/utils/scan";
+import {formatTime} from "/src/utils/formatter";
 
 /** @param {NS} ns */
 /** @param {import(".").NS } ns */
 export async function main(ns) {
+  ns.disableLog('ALL')
   const EXTRA_HOME_RAM = ns.args[0]
   const TARGET_HACK_LEVEL = ns.args[1]
   ns.tprint(`Target hack level: ${TARGET_HACK_LEVEL}`)
@@ -15,6 +17,9 @@ export async function main(ns) {
   const servers = scanAll(ns)
   const neededRamToExp = ns.getScriptRam(`${ROOT_SRC}/weaken.js`)
   let myHackingLevel = ns.getHackingLevel()
+  const weakenTime = ns.getWeakenTime(EXP_FARM)
+
+  await ns.sleep(10000)
 
   while (TARGET_HACK_LEVEL > myHackingLevel) {
     myHackingLevel = ns.getHackingLevel()
@@ -23,6 +28,9 @@ export async function main(ns) {
 
     const myServers = ns.getPurchasedServers()
     const availableServers = rootedServers.concat(myServers).concat('home')
+      .filter((server) => {
+        return ns.getServerUsedRam(server) === 0
+      })
 
     for (const availableServer of availableServers) {
       const serverRam = ns.getServerMaxRam(availableServer)
@@ -31,12 +39,7 @@ export async function main(ns) {
       const threadCnt = Math.floor(availableRam / neededRamToExp)
       if (availableRam >= neededRamToExp) {
         const result = ns.exec(`${ROOT_SRC}/weaken.js`, availableServer, threadCnt, EXP_FARM)
-        if (result === 0) {
-          continue
-        }
-        // logger.info(`Hack ${EXP_FARM}`)
-      } else {
-        //go to next rooted server
+        logger.mon(`[${EXP_FARM}] [${threadCnt}t] [${formatTime(weakenTime)}s]`)
       }
     }
     await ns.sleep(100)
