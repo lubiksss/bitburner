@@ -26,6 +26,15 @@ export async function main(ns) {
     const hackableServers = getHackableServers(ns, servers)
     const availableServers = ["home"]
 
+    hackableServers.sort((a, b) => {
+      const aWeakenTime = ns.getWeakenTime(a)
+      const bWeakenTime = ns.getWeakenTime(b)
+      const aMoneyPerTime = ns.getServerMaxMoney(a) / aWeakenTime
+      const bMoneyPerTime = ns.getServerMaxMoney(b) / bWeakenTime
+      return bMoneyPerTime - aMoneyPerTime
+    })
+
+
     for (const targetServer of hackableServers) {
 
       const hackTime = ns.getHackTime(targetServer)

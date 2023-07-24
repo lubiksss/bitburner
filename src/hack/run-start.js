@@ -34,7 +34,9 @@ export async function main(ns) {
 
     while (true) {
       const availableServers = getAvailableServers(ns, servers)
-      const availableServersExceptHome = availableServers.filter((server) => server !== 'home')
+      const availableServersExceptHome = availableServers
+        .filter(s => !s.includes('home'))
+        .filter(s => ns.getServerMaxRam(s) > 0)
 
       const homeMaxRam = ns.getServerMaxRam('home')
       const homeUsedRam = ns.getServerUsedRam('home')

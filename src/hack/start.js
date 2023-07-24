@@ -48,42 +48,56 @@ export async function main(ns) {
 
 
   if (DO_SETUP) {
-    logger.info(`Start setup process`)
-    ns.exec(`${ROOT_SRC}/run-setup.js`, "home", 1)
+    const pid = ns.exec(`${ROOT_SRC}/run-setup.js`, "home", 1)
+    if (pid) {
+      logger.info(`Start setup process`)
+    }
   }
 
   if (DO_SHARE) {
-    logger.info(`Start share process`)
-    ns.exec(`${ROOT_SRC}/run-share.js`, "home", 1, EXTRA_HOME_RAM)
+    const pid = ns.exec(`${ROOT_SRC}/run-share.js`, "home", 1, EXTRA_HOME_RAM)
+    if (pid) {
+      logger.info(`Start share process`)
+    }
   }
 
   if (DO_HACK) {
-    logger.info(`Start hack process`)
-    ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, EXTRA_HOME_RAM)
-    tail(ns, `${ROOT_SRC}/run-hack.js`, 683, 5, 1450, 438 + 130, EXTRA_HOME_RAM)
+    const pid = ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, 5)
+    if (pid) {
+      logger.info(`Start hack process`)
+      tail(ns, `${ROOT_SRC}/run-hack.js`, 683, 5, 1450, 438 + 130, 5)
+    }
   }
 
   if (DO_Hwgw) {
-    logger.info(`Start hwgw process`)
-    ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM, INTERVAL_TIME)
-    tail(ns, `${ROOT_SRC}/run-hwgw.js`, 683, 5, 1450, 438 + 130, EXTRA_HOME_RAM, INTERVAL_TIME)
+    const pid = ns.exec(`${ROOT_SRC}/run-hwgw.js`, "home", 1, EXTRA_HOME_RAM, INTERVAL_TIME)
+    if (pid) {
+      logger.info(`Start hwgw process`)
+      tail(ns, `${ROOT_SRC}/run-hwgw.js`, 683, 5, 1450, 438 + 130, EXTRA_HOME_RAM, INTERVAL_TIME)
+    }
   }
 
   if (DO_PURCHASE_SERVER) {
-    logger.info(`Start server purchase process`)
-    ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
+    const pid = ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
+    if (pid) {
+      logger.info(`Start server purchase process`)
+    }
   }
 
   if (DO_HwgwH) {
-    logger.info(`Start hwgw home process`)
-    ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
-    tail(ns, `${ROOT_SRC}/run-hwgw-home.js`, 683, 10, 1450, 438 + 130 + 150, EXTRA_HOME_RAM)
+    const pid = ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
+    if (pid) {
+      logger.info(`Start hwgw home process`)
+      tail(ns, `${ROOT_SRC}/run-hwgw-home.js`, 683, 10, 1450, 438 + 130 + 150, EXTRA_HOME_RAM)
+    }
   }
 
   if (DO_FARM_EXP) {
-    logger.info(`Start exp process`)
-    ns.exec(`${ROOT_SRC}/run-exp.js`, "home", 1, TARGET_HACK_LEVEL)
-    tail(ns, `${ROOT_SRC}/run-exp.js`, 683, 3, 1450, 438 + 130 + 150 + 300, TARGET_HACK_LEVEL)
+    const pid = ns.exec(`${ROOT_SRC}/run-exp.js`, "home", 1, TARGET_HACK_LEVEL)
+    if (pid) {
+      tail(ns, `${ROOT_SRC}/run-exp.js`, 683, 3, 1450, 438 + 130 + 150 + 300, TARGET_HACK_LEVEL)
+      logger.info(`Start exp process`)
+    }
   }
 }
 
