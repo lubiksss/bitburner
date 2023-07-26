@@ -65,7 +65,7 @@ export async function main(ns) {
 
       const lvl1 = pgmCnt < 3
       const lvl2 = pgmCnt >= 3
-      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.3 && levelFlag[2] === 1
+      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.2 && levelFlag[2] === 1
       const lvl4 = pgmCnt >= 3 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
 
       if (lvl1 && levelFlag[1] === 0) {
@@ -87,7 +87,7 @@ export async function main(ns) {
       }
       if (lvl4 && levelFlag[4] === 0) {
         levelFlag[4] = 1
-        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH", "--doExp"]
+        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH", "--doExp", "--doServer"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
         homeRamUsageQue = Array(10).fill(1)
         serverRamUsageQue = Array(10).fill(1)

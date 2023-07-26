@@ -79,7 +79,9 @@ export function formatPercent(number) {
 }
 
 export function isPossibleThreadCnt(needed, available) {
-  if (needed > available) {
+  if (needed < 0) {
+    return COLOR_RED + `${needed}t/${available}t` + COLOR_RESET;
+  } else if (needed > available) {
     return COLOR_YELLOW + `${needed}t/${available}t` + COLOR_RESET;
   } else {
     return COLOR_MAGENTA + `${needed}t/${available}t` + COLOR_RESET;

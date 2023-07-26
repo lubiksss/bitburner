@@ -35,7 +35,7 @@ export async function main(ns) {
       if (isUpgraded) {
         const newName = targetServer.replace(`${currentSize}`, `${currentSize * 2}`)
         ns.renamePurchasedServer(targetServer, newName)
-        logger.mon(`[Purchase] ${newName}`)
+        logger.mon(`[Upgrade] ${newName}`)
       }
     }
     await ns.sleep(100)

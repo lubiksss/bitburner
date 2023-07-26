@@ -77,13 +77,6 @@ export async function main(ns) {
     }
   }
 
-  if (DO_PURCHASE_SERVER) {
-    const pid = ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
-    if (pid) {
-      logger.info(`Start server purchase process`)
-    }
-  }
-
   if (DO_HwgwH) {
     const pid = ns.exec(`${ROOT_SRC}/run-hwgw-home.js`, "home", 1, EXTRA_HOME_RAM)
     if (pid) {
@@ -99,6 +92,14 @@ export async function main(ns) {
       logger.info(`Start exp process`)
     }
   }
+  if (DO_PURCHASE_SERVER) {
+    const pid = ns.exec(`${ROOT_SRC}/run-server.js`, "home", 1, MAX_PURCHASE_SERVER_SIZE)
+    if (pid) {
+      logger.info(`Start server purchase process`)
+      tail(ns, `${ROOT_SRC}/run-server.js`, 683, 3, 1450, 438 + 130 + 150 + 300, MAX_PURCHASE_SERVER_SIZE)
+    }
+  }
+
 }
 
 export function autocomplete(data, args) {
