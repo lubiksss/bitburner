@@ -65,7 +65,7 @@ export async function main(ns) {
 
       const lvl1 = pgmCnt < 3
       const lvl2 = pgmCnt >= 3
-      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.2 && levelFlag[2] === 1
+      const lvl3 = pgmCnt >= 3 && avgServerRamUsage <= 0.1 && levelFlag[2] === 1
       const lvl4 = pgmCnt >= 3 && avgHomeRamUsage <= 0.1 && levelFlag[3] === 1
 
       if (lvl1 && levelFlag[1] === 0) {

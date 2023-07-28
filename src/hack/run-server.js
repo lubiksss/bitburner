@@ -5,6 +5,7 @@ import {Logger} from "/src/utils/logger";
 export async function main(ns) {
   ns.disableLog('ALL')
   const logger = new Logger(ns)
+  const SERVER_LIMIT = 24
 
   let TARGET_SERVER_SIZE = 32
   let MAX_TARGET_SERVER_SIZE = ns.args[0]
@@ -15,7 +16,7 @@ export async function main(ns) {
   while (true) {
     const purchasedServer = ns.getPurchasedServers()
 
-    if (purchasedServer.length < 25) {
+    if (purchasedServer.length < SERVER_LIMIT) {
       //buy process
       const cnt = purchasedServer.length
       const serverName = `jake-${cnt}-${TARGET_SERVER_SIZE}`

@@ -3,9 +3,7 @@
 
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-  const ifCondition = 0
-  if (ifCondition) {
-    ns.tprint('if')
-  }
+  const bitNodeMulti = ns.getBitNodeMultipliers()
+  ns.tprint(`bitNodeMulti: ${JSON.stringify(bitNodeMulti)}`)
 }
 
