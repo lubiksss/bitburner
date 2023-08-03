@@ -3,7 +3,7 @@
 
 /** @param {import(".").NS } ns */
 export async function main(ns) {
-  const bitNodeMulti = ns.getBitNodeMultipliers()
-  ns.tprint(`bitNodeMulti: ${JSON.stringify(bitNodeMulti)}`)
+  const info = ns.gang.getGangInformation()
+  ns.tprint(info.wantedPenalty)
 }
 

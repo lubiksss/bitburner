@@ -15,7 +15,7 @@ export async function main(ns) {
     ['doHwgwH', false],
     ['extraHomeRamRatio', 0.05],
     ['maxPurchaseServerSize', 1048576],
-    ['targetHackLevel', 5000],
+    ['targetHackLevel', 50000],
     ['intervalTime', 100],
   ])
   const DO_SETUP = data.doSetup
