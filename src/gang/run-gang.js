@@ -15,11 +15,11 @@ export async function main(ns) {
   const TRAIN_TASK = "Train Combat"
   const WARFARE_TASK = "Territory Warfare"
   const TRAIN_TASK_THRESHOLD = 50
-  const WANTED_LEVEL_UPPER_THRESHOLD = 1000
-  const WANTED_LEVEL_LOWER_THRESHOLD = 1
+  const WANTED_LEVEL_UPPER_THRESHOLD = 500000
+  const WANTED_LEVEL_LOWER_THRESHOLD = 1.1
   const WANTED_PENALTY_UPPER_THRESHOLD = 0.99
-  const WANTED_PENALTY_LOWER_THRESHOLD = 0.9
-  const ASCENDING_EXP_THRESHOLD = 0.8
+  const WANTED_PENALTY_LOWER_THRESHOLD = 0.8
+  const ASCENDING_EXP_THRESHOLD = 1
   const INITIAL_ASCENDING_EXP_THRESHOLD = 4000
   const WARFARE_THRESHOLD = 0.55
 
@@ -47,6 +47,10 @@ export async function main(ns) {
     const isStrongest = Object.keys(otherGangs)
       .filter((g) => g !== gang.faction)
       .every((gang) => ns.gang.getChanceToWinClash(gang) > WARFARE_THRESHOLD)
+    const isOverLevel = members.every((member) => {
+      const info = ns.gang.getMemberInformation(member)
+      return info.str > 5000
+    })
 
     // First of all, recruit
     if (ns.gang.canRecruitMember()) {
@@ -71,10 +75,10 @@ export async function main(ns) {
     })
 
     // Purchase equipment and augmentations
-    equipsRelatedToCombat.forEach((equip) => {
+    equipsRelatedToCombat.concat(equipsRelatedToHack).forEach((equip) => {
       members.forEach((member) => {
         if (ns.gang.purchaseEquipment(member, equip)) {
-          logger.mon(`Purchase ${equip} for ${member}`)
+          // logger.mon(`Purchase ${equip} for ${member}`)
         }
       })
     })
@@ -84,12 +88,12 @@ export async function main(ns) {
       const info = ns.gang.getMemberInformation(member)
       if (info.str < TRAIN_TASK_THRESHOLD) {
         ns.gang.setMemberTask(member, TRAIN_TASK)
-        // } else if (!isStrongest && members.length == 12) {
-        //   ns.gang.setMemberTask(member, WARFARE_TASK)
+      } else if (!isStrongest && isOverLevel && members.length == 12) {
+        ns.gang.setMemberTask(member, WARFARE_TASK)
       } else {
-        if (info.task === GOOD_TASK && gang.wantedLevel > WANTED_LEVEL_LOWER_THRESHOLD) {
+        if (info.task === GOOD_TASK && gang.wantedLevel !== 1 && (gang.wantedLevel > WANTED_LEVEL_LOWER_THRESHOLD || gang.wantedPenalty < WANTED_PENALTY_UPPER_THRESHOLD)) {
           // Do not change task
-        } else if (gang.wantedLevel > WANTED_LEVEL_UPPER_THRESHOLD) {
+        } else if (gang.wantedLevel !== 1 && (gang.wantedLevel > WANTED_LEVEL_UPPER_THRESHOLD || gang.wantedPenalty < WANTED_PENALTY_LOWER_THRESHOLD)) {
           ns.gang.setMemberTask(member, GOOD_TASK)
         } else {
           if (info.str > 300) {
