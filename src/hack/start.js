@@ -11,6 +11,7 @@ export async function main(ns) {
     ['doExp', false],
     ['doShare', false],
     ['doHack', false],
+    ['doGang', false],
     ['doHwgw', false],
     ['doHwgwH', false],
     ['extraHomeRamRatio', 0.05],
@@ -23,6 +24,7 @@ export async function main(ns) {
   const DO_FARM_EXP = data.doExp
   const DO_SHARE = data.doShare
   const DO_HACK = data.doHack
+  const DO_GANG = data.doGang
   const DO_Hwgw = data.doHwgw
   const DO_HwgwH = data.doHwgwH
   const EXTRA_HOME_RAM_RATIO = data.extraHomeRamRatio
@@ -53,14 +55,18 @@ export async function main(ns) {
       logger.info(`Start setup process`)
     }
   }
-
   if (DO_SHARE) {
     const pid = ns.exec(`${ROOT_SRC}/run-share.js`, "home", 1, EXTRA_HOME_RAM)
     if (pid) {
       logger.info(`Start share process`)
     }
   }
-
+  if (DO_GANG) {
+    const pid = ns.exec(`${ROOT_SRC}/run-gang.js`, "home", 1)
+    if (pid) {
+      logger.info(`Start gang process`)
+    }
+  }
   if (DO_HACK) {
     const pid = ns.exec(`${ROOT_SRC}/run-hack.js`, "home", 1, 5)
     if (pid) {
@@ -109,6 +115,7 @@ export function autocomplete(data, args) {
     "--doServer",
     "--doExp",
     "--doHack",
+    "--doGang",
     "--doShare",
     "--doHwgw",
     "--doHwgwH",

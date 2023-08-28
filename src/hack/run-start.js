@@ -75,19 +75,19 @@ export async function main(ns) {
       }
       if (lvl2 && levelFlag[2] === 0) {
         levelFlag[2] = 1
-        const args = ["--doHwgw", "--doServer"]
+        const args = ["--doHwgw", "--doServer", "--doGang"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
       }
       if (lvl3 && levelFlag[3] === 0) {
         levelFlag[3] = 1
-        const args = ["--doHwgw", "--doServer", "--intervalTime", 1]
+        const args = ["--doHwgw", "--intervalTime", 1, "--doServer", "--doGang"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
         homeRamUsageQue = Array(10).fill(1)
         serverRamUsageQue = Array(10).fill(1)
       }
       if (lvl4 && levelFlag[4] === 0) {
         levelFlag[4] = 1
-        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH", "--doExp", "--doServer"]
+        const args = ["--doHwgw", "--intervalTime", 1, "--doHwgwH", "--doExp", "--doServer", "--doGang"]
         ns.exec(`${ROOT_SRC}/start.js`, "home", 1, ...args)
         homeRamUsageQue = Array(10).fill(1)
         serverRamUsageQue = Array(10).fill(1)
@@ -101,23 +101,4 @@ export async function main(ns) {
       await ns.sleep(1000)
     }
   }
-}
-
-
-export function autocomplete(data, args) {
-  const serverSizes = [...Array(21).keys()].map((i) => Math.pow(2, i))
-  return [
-    "--doSetup",
-    "--doServer",
-    "--doExp",
-    "--doHack",
-    "--doShare",
-    "--doHwgw",
-    "--doHwgwH",
-    "--extraHomeRamRatio",
-    "--maxPurchaseServerSize",
-    "--targetHackLevel",
-    "--intervalTime",
-    ...serverSizes
-  ]
 }
